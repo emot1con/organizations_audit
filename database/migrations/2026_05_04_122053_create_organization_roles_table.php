@@ -1,0 +1,19 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up(): void {
+        Schema::create('organization_roles', function (Blueprint $table) {
+            $table->id();
+            $table->string('name'); // admin, bendahara, ketua_divisi, anggota
+            $table->string('scope'); // 'organization' | 'division'
+            $table->timestamps();
+        });
+    }
+    public function down(): void {
+        Schema::dropIfExists('organization_roles');
+    }
+};
