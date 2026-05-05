@@ -24,4 +24,6 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // Rute Member / Role
     Route::post('/organizations/{organization}/members', [MemberController::class, 'store']);
+    Route::put('/organizations/{organization}/members/{member}', [MemberController::class, 'update']);
+    Route::delete('/organizations/{organization}/members/{member}', [MemberController::class, 'destroy']);
 });
