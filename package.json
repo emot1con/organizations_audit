@@ -7,10 +7,16 @@
         "dev": "vite"
     },
     "devDependencies": {
-        "@tailwindcss/vite": "^4.0.0",
+        "@tailwindcss/vite": "^4.2.4",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^3.0.0",
-        "tailwindcss": "^4.0.0",
+        "tailwindcss": "^4.2.4",
         "vite": "^8.0.0"
+    },
+    "dependencies": {
+        "apexcharts": "^5.10.6",
+        "bootstrap": "^5.3.8",
+        "simplebar": "^6.3.3",
+        "swiper": "^12.1.4"
     }
 }
