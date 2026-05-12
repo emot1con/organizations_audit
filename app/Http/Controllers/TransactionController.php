@@ -6,15 +6,30 @@ use App\Models\Transaction;
 use App\Models\UserOrganization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use OpenApi\Attributes as OA;
 
 class TransactionController extends Controller
 {
+    #[OA\Get(
+        path: "/api/organizations/{org_id}/transactions",
+        summary: "Get list of transactions (Paginated)",
+        security: [["sanctum" => []]],
+        tags: ["Transactions"],
+        parameters: [
+            new OA\Parameter(name: "org_id", in: "path", required: true, description: "Organization ID", schema: new OA\Schema(type: "integer")),
+            new OA\Parameter(name: "month", in: "query", required: false, schema: new OA\Schema(type: "integer", minimum: 1, maximum: 12)),
+            new OA\Parameter(name: "year", in: "query", required: false, schema: new OA\Schema(type: "integer")),
+            new OA\Parameter(name: "status", in: "query", required: false, schema: new OA\Schema(type: "string", enum: ["pending", "approved", "rejected"])),
+            new OA\Parameter(name: "page", in: "query", required: false, schema: new OA\Schema(type: "integer"))
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "List of transactions paginated")
+        ]
+    )]
     public function index(Request $request, $organization)
     {
-        // Otentikasi: User harus terdaftar di organisasi ini
         Gate::authorize('viewAny', [Transaction::class, $organization]);
 
-        // Cek Role User di Organisasi tersebut
         $userOrg = UserOrganization::with('role')
             ->where('user_id', $request->user()->id)
             ->where('organization_id', $organization)
@@ -23,7 +38,6 @@ class TransactionController extends Controller
         $query = Transaction::with(['category', 'creator', 'approver', 'division'])
             ->where('organization_id', $organization);
 
-        // Skoping Data: Jika bukan admin/manager, ia hanya melihat milik divisinya atau miliknya sendiri
         $roleName = $userOrg->role ? $userOrg->role->name : 'member';
         if (!in_array($roleName, ['admin', 'manager'])) {
             $query->where(function($q) use ($request, $userOrg) {
@@ -34,7 +48,6 @@ class TransactionController extends Controller
             });
         }
 
-        // Filtering: Month & Year (Opsional via Query param)
         if ($request->filled('month')) {
             $query->whereMonth('transaction_date', $request->month);
         }
@@ -45,11 +58,38 @@ class TransactionController extends Controller
             $query->where('status', $request->status);
         }
 
-        // Fitur Pagination bawaan laravel
         $transactions = $query->latest('transaction_date')->paginate(15);
         return response()->json($transactions);
     }
 
+    #[OA\Post(
+        path: "/api/organizations/{org_id}/transactions",
+        summary: "Create a new transaction",
+        security: [["sanctum" => []]],
+        tags: ["Transactions"],
+        parameters: [
+            new OA\Parameter(name: "org_id", in: "path", required: true, description: "Organization ID", schema: new OA\Schema(type: "integer"))
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ["category_id", "amount", "transaction_date"],
+                properties: [
+                    new OA\Property(property: "division_id", type: "integer", nullable: true),
+                    new OA\Property(property: "category_id", type: "integer"),
+                    new OA\Property(property: "amount", type: "number", format: "float"),
+                    new OA\Property(property: "description", type: "string", nullable: true),
+                    new OA\Property(property: "proof_url", type: "string", format: "uri", nullable: true),
+                    new OA\Property(property: "transaction_date", type: "string", format: "date")
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: "Transaction created"),
+            new OA\Response(response: 403, description: "Division cross-validation failed"),
+            new OA\Response(response: 422, description: "Validation error")
+        ]
+    )]
     public function store(Request $request, $organization)
     {
         Gate::authorize('create', [Transaction::class, $organization]);
@@ -66,7 +106,6 @@ class TransactionController extends Controller
             'transaction_date' => 'required|date',
         ]);
 
-        // Cross Validation: Mengecek division_id terikat ke organization yg sama (Mencegah Bypass Hack)
         if ($request->filled('division_id')) {
             $isValidDivision = \App\Models\Division::where('id', $validated['division_id'])
                                ->where('organization_id', $organization)
@@ -84,6 +123,20 @@ class TransactionController extends Controller
         return response()->json($transaction, 201);
     }
 
+    #[OA\Get(
+        path: "/api/transactions/{id}",
+        summary: "Get specific transaction details",
+        security: [["sanctum" => []]],
+        tags: ["Transactions"],
+        parameters: [
+            new OA\Parameter(name: "id", in: "path", required: true, description: "Transaction ID", schema: new OA\Schema(type: "integer"))
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Transaction detail"),
+            new OA\Response(response: 403, description: "Unauthorized access"),
+            new OA\Response(response: 404, description: "Not found")
+        ]
+    )]
     public function show($id)
     {
         $transaction = Transaction::with(['category', 'creator', 'approver', 'division'])->findOrFail($id);
@@ -92,6 +145,30 @@ class TransactionController extends Controller
         return response()->json($transaction);
     }
 
+    #[OA\Put(
+        path: "/api/transactions/{id}",
+        summary: "Update existing transaction (Full/Partial)",
+        security: [["sanctum" => []]],
+        tags: ["Transactions"],
+        parameters: [
+            new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "integer"))
+        ],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: "category_id", type: "integer"),
+                    new OA\Property(property: "amount", type: "number", format: "float"),
+                    new OA\Property(property: "description", type: "string"),
+                    new OA\Property(property: "proof_url", type: "string", format: "uri"),
+                    new OA\Property(property: "transaction_date", type: "string", format: "date")
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: "Updated transaction"),
+            new OA\Response(response: 403, description: "Unauthorized access")
+        ]
+    )]
     public function update(Request $request, $id)
     {
         $transaction = Transaction::findOrFail($id);
@@ -109,6 +186,28 @@ class TransactionController extends Controller
         return response()->json($transaction);
     }
 
+    #[OA\Patch(
+        path: "/api/transactions/{id}/status",
+        summary: "Update transaction status",
+        security: [["sanctum" => []]],
+        tags: ["Transactions"],
+        parameters: [
+            new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "integer"))
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ["status"],
+                properties: [
+                    new OA\Property(property: "status", type: "string", enum: ["pending", "approved", "rejected"])
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: "Status updated successfully"),
+            new OA\Response(response: 403, description: "Only admins or managers can update status")
+        ]
+    )]
     public function changeStatus(Request $request, $id)
     {
         $transaction = Transaction::findOrFail($id);
@@ -130,6 +229,19 @@ class TransactionController extends Controller
         return response()->json($transaction);
     }
 
+    #[OA\Delete(
+        path: "/api/transactions/{id}",
+        summary: "Delete a transaction",
+        security: [["sanctum" => []]],
+        tags: ["Transactions"],
+        parameters: [
+            new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "integer"))
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Transaction deleted"),
+            new OA\Response(response: 403, description: "Unauthorized")
+        ]
+    )]
     public function destroy($id)
     {
         $transaction = Transaction::findOrFail($id);
