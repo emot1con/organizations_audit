@@ -9,10 +9,12 @@ use App\Http\Controllers\MemberController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TransactionController;
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('throttle:auth')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+});
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
     
@@ -30,7 +32,14 @@ Route::middleware('auth:sanctum')->group(function () {
     // Rute Kategori
     Route::apiResource('categories', CategoryController::class);
 
-    // Rute Transaksi
-    Route::apiResource('organizations.transactions', TransactionController::class)->shallow();
+    // Rute Transaksi (dengan throttle spam khusus untuk route POST / pembuatan)
+    Route::apiResource('organizations.transactions', TransactionController::class)
+        ->shallow()
+        ->except(['store']);
+        
+    Route::post('organizations/{organization}/transactions', [TransactionController::class, 'store'])
+        ->name('organizations.transactions.store')
+        ->middleware('throttle:transaction_spam');
+
     Route::patch('/transactions/{transaction}/status', [TransactionController::class, 'changeStatus']);
 });
