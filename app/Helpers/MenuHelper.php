@@ -10,42 +10,50 @@ class MenuHelper
             [
                 'icon' => 'dashboard',
                 'name' => 'Dashboard',
-                'subItems' => [
-                    ['name' => 'Ecommerce', 'path' => '/'],
-                ],
+                'path' => '/',
             ],
             [
-                'icon' => 'calendar',
-                'name' => 'Calendar',
-                'path' => '/calendar',
+                'icon' => 'organizations',
+                'name' => 'Organizations',
+                'path' => '/organizations',
             ],
-            [
-                'icon' => 'user-profile',
-                'name' => 'User Profile',
-                'path' => '/profile',
-            ],
-            [
-                'name' => 'Forms',
-                'icon' => 'forms',
-                'subItems' => [
-                    ['name' => 'Form Elements', 'path' => '/form-elements', 'pro' => false],
-                ],
-            ],
-            [
-                'name' => 'Tables',
-                'icon' => 'tables',
-                'subItems' => [
-                    ['name' => 'Basic Tables', 'path' => '/basic-tables', 'pro' => false]
-                ],
-            ],
-            [
-                'name' => 'Pages',
-                'icon' => 'pages',
-                'subItems' => [
-                    ['name' => 'Blank Page', 'path' => '/blank', 'pro' => false],
-                    ['name' => '404 Error', 'path' => '/error-404', 'pro' => false]
-                ],
-            ],
+            // [
+            //     'icon' => '',
+            //     'name' => 'Dashboard',
+            //     'path' => '/',
+            // ],
+            // [
+            //     'icon' => 'calendar',
+            //     'name' => 'Calendar',
+            //     'path' => '/calendar',
+            // ],
+            // [
+            //     'icon' => 'user-profile',
+            //     'name' => 'User Profile',
+            //     'path' => '/profile',
+            // ],
+            // [
+            //     'name' => 'Forms',
+            //     'icon' => 'forms',
+            //     'subItems' => [
+            //         ['name' => 'Form Elements', 'path' => '/form-elements', 'pro' => false],
+            //     ],
+            // ],
+            // [
+            //     'name' => 'Tables',
+            //     'icon' => 'tables',
+            //     'subItems' => [
+            //         ['name' => 'Basic Tables', 'path' => '/basic-tables', 'pro' => false]
+            //     ],
+            // ],
+            // [
+            //     'name' => 'Pages',
+            //     'icon' => 'pages',
+            //     'subItems' => [
+            //         ['name' => 'Blank Page', 'path' => '/blank', 'pro' => false],
+            //         ['name' => '404 Error', 'path' => '/error-404', 'pro' => false]
+            //     ],
+            // ],
         ];
     }
 
@@ -53,33 +61,48 @@ class MenuHelper
     {
         return [
             [
-                'icon' => 'charts',
-                'name' => 'Charts',
-                'subItems' => [
-                    ['name' => 'Line Chart', 'path' => '/line-chart', 'pro' => false],
-                    ['name' => 'Bar Chart', 'path' => '/bar-chart', 'pro' => false]
-                ],
+                'icon' => 'login',
+                'name' => 'Login',
+                'path' => '/login',
             ],
             [
-                'icon' => 'ui-elements',
-                'name' => 'UI Elements',
-                'subItems' => [
-                    ['name' => 'Alerts', 'path' => '/alerts', 'pro' => false],
-                    ['name' => 'Avatar', 'path' => '/avatars', 'pro' => false],
-                    ['name' => 'Badge', 'path' => '/badge', 'pro' => false],
-                    ['name' => 'Buttons', 'path' => '/buttons', 'pro' => false],
-                    ['name' => 'Images', 'path' => '/image', 'pro' => false],
-                    ['name' => 'Videos', 'path' => '/videos', 'pro' => false],
-                ],
+                'icon' => 'register',
+                'name' => 'Register',
+                'path' => '/register',
             ],
             [
-                'icon' => 'authentication',
-                'name' => 'Authentication',
-                'subItems' => [
-                    ['name' => 'Sign In', 'path' => '/signin', 'pro' => false],
-                    ['name' => 'Sign Up', 'path' => '/signup', 'pro' => false],
-                ],
+                'icon' => 'logout',
+                'name' => 'Logout',
+                'path' => '/logout',
             ],
+            // [
+            //     'icon' => 'charts',
+            //     'name' => 'Charts',
+            //     'subItems' => [
+            //         ['name' => 'Line Chart', 'path' => '/line-chart', 'pro' => false],
+            //         ['name' => 'Bar Chart', 'path' => '/bar-chart', 'pro' => false]
+            //     ],
+            // ],
+            // [
+            //     'icon' => 'ui-elements',
+            //     'name' => 'UI Elements',
+            //     'subItems' => [
+            //         ['name' => 'Alerts', 'path' => '/alerts', 'pro' => false],
+            //         ['name' => 'Avatar', 'path' => '/avatars', 'pro' => false],
+            //         ['name' => 'Badge', 'path' => '/badge', 'pro' => false],
+            //         ['name' => 'Buttons', 'path' => '/buttons', 'pro' => false],
+            //         ['name' => 'Images', 'path' => '/image', 'pro' => false],
+            //         ['name' => 'Videos', 'path' => '/videos', 'pro' => false],
+            //     ],
+            // ],
+            // [
+            //     'icon' => 'authentication',
+            //     'name' => 'Authentication',
+            //     'subItems' => [
+            //         ['name' => 'Sign In', 'path' => '/signin', 'pro' => false],
+            //         ['name' => 'Sign Up', 'path' => '/signup', 'pro' => false],
+            //     ],
+            // ],
         ];
     }
 
@@ -91,7 +114,7 @@ class MenuHelper
                 'items' => self::getMainNavItems()
             ],
             [
-                'title' => 'Others',
+                'title' => 'Auth',
                 'items' => self::getOthersItems()
             ]
         ];

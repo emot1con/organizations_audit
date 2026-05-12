@@ -1,12 +1,26 @@
 <?php
 
+use App\Http\Controllers\OrganizationPageController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;
+// use App\Http\Controllers\DashboardController;   
 
 // dashboard pages
 Route::get('/', function () {
-    return view('pages.dashboard.ecommerce', ['title' => 'E-commerce Dashboard']);
+    return view('pages.dashboard', ['title' => 'Organizations Dashboard']);
 })->name('dashboard');
+
+
+
+// Organizations
+Route::resource('organizations', OrganizationPageController::class);
+
+Route::get('/create-organizations', function () {
+    return view('pages.organizations.create', ['title' => 'Buat Organisasi ']);
+})->name('organizations-create');
+
+
+
+
 
 // calender pages
 Route::get('/calendar', function () {
@@ -83,6 +97,10 @@ Route::get('/videos', function () {
     return view('pages.ui-elements.videos', ['title' => 'Videos']);
 })->name('videos');
 
+
+Route::fallback(function () {
+    return response()->view('pages.errors.error-404', [], 404);
+});
 
 
 
