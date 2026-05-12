@@ -9,7 +9,8 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        return response()->json(Category::all());
+        // Menambahkan pagination (15 item per halaman)
+        return response()->json(Category::paginate(15));
     }
 
     public function store(Request $request)

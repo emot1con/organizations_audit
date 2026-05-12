@@ -17,9 +17,10 @@ class DivisionController extends Controller
 
         if (!$isMember) return response()->json(['message' => 'Unauthorized'], 403);
 
-        $divisions = Division::where('organization_id', $organization_id)->get();
+        // Menambahkan pagination (15 item per halaman)
+        $divisions = Division::where('organization_id', $organization_id)->paginate(15);
         
-        return response()->json(['data' => $divisions]);
+        return response()->json($divisions);
     }
 
     // Membuat Room Divisi (Fitur 3)

@@ -13,15 +13,12 @@ class OrganizationController extends Controller
     // Mengambil daftar organisasi milik user yang sedang login
     public function index(Request $request)
     {
-        // Mengambil data relasi organisasi dan jabatannya
+        // Mengambil data relasi organisasi dan jabatannya dengan pagination
         $myOrganizations = $request->user()->userOrganizations()
             ->with(['organization', 'role', 'division'])
-            ->get();
+            ->paginate(15);
 
-        return response()->json([
-            'message' => 'Berhasil mengambil daftar organisasi',
-            'data' => $myOrganizations
-        ]);
+        return response()->json($myOrganizations);
     }
 
     // Membuat room organisasi baru
