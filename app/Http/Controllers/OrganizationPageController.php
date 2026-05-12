@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrganizationPageController extends Controller
 {
@@ -15,8 +16,9 @@ class OrganizationPageController extends Controller
         ->userOrganizations()
         ->with(['organization', 'role', 'division'])
         ->get();
+        dd(Auth::user());
 
-    return view('pages.organizations.index', [
+    return view('pages.organizations.show', [
         'organizations' => $organizations
     ]);
 }

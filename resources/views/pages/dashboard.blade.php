@@ -22,6 +22,7 @@
         <x-ecommerce.recent-orders />
         </div> --}}
     </div>
+    @auth
     <div class="p-6">
 
         <!-- HEADER -->
@@ -36,6 +37,7 @@
 
         </div>
 
+        
         <!-- GRID -->
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7">
 
@@ -298,6 +300,8 @@
             </div>
 
         </div>
+       
 
     </div>
+     @endauth
     @endsection

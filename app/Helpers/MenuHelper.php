@@ -1,22 +1,39 @@
 <?php
 
 namespace App\Helpers;
+use Illuminate\Support\Facades\Auth;
 
 class MenuHelper
 {
     public static function getMainNavItems()
     {
-        return [
-            [
+         $items = [];
+
+        if (!Auth::check()) {
+
+            $items[] =  [
                 'icon' => 'dashboard',
                 'name' => 'Dashboard',
                 'path' => '/',
-            ],
-            [
+            ];
+
+        } else {
+
+            $items[] =  [
+                'icon' => 'dashboard',
+                'name' => 'Dashboard',
+                'path' => '/',
+            ];
+            $items[] =  [
                 'icon' => 'organizations',
                 'name' => 'Organizations',
                 'path' => '/organizations',
-            ],
+            ];
+        }
+
+        return $items;
+           
+           
             // [
             //     'icon' => '',
             //     'name' => 'Dashboard',
@@ -54,56 +71,31 @@ class MenuHelper
             //         ['name' => '404 Error', 'path' => '/error-404', 'pro' => false]
             //     ],
             // ],
-        ];
     }
 
     public static function getOthersItems()
     {
-        return [
-            [
+        $items = [];
+
+        if (!Auth::check()) {
+
+            $items[] = [
                 'icon' => 'login',
                 'name' => 'Login',
                 'path' => '/login',
-            ],
-            [
-                'icon' => 'register',
-                'name' => 'Register',
-                'path' => '/register',
-            ],
-            [
+            ];
+
+        } else {
+
+            $items[] = [
                 'icon' => 'logout',
                 'name' => 'Logout',
                 'path' => '/logout',
-            ],
-            // [
-            //     'icon' => 'charts',
-            //     'name' => 'Charts',
-            //     'subItems' => [
-            //         ['name' => 'Line Chart', 'path' => '/line-chart', 'pro' => false],
-            //         ['name' => 'Bar Chart', 'path' => '/bar-chart', 'pro' => false]
-            //     ],
-            // ],
-            // [
-            //     'icon' => 'ui-elements',
-            //     'name' => 'UI Elements',
-            //     'subItems' => [
-            //         ['name' => 'Alerts', 'path' => '/alerts', 'pro' => false],
-            //         ['name' => 'Avatar', 'path' => '/avatars', 'pro' => false],
-            //         ['name' => 'Badge', 'path' => '/badge', 'pro' => false],
-            //         ['name' => 'Buttons', 'path' => '/buttons', 'pro' => false],
-            //         ['name' => 'Images', 'path' => '/image', 'pro' => false],
-            //         ['name' => 'Videos', 'path' => '/videos', 'pro' => false],
-            //     ],
-            // ],
-            // [
-            //     'icon' => 'authentication',
-            //     'name' => 'Authentication',
-            //     'subItems' => [
-            //         ['name' => 'Sign In', 'path' => '/signin', 'pro' => false],
-            //         ['name' => 'Sign Up', 'path' => '/signup', 'pro' => false],
-            //     ],
-            // ],
-        ];
+                'logout' => true,
+            ];
+        }
+
+        return $items;
     }
 
     public static function getMenuGroups()

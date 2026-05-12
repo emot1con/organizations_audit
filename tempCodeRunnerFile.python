@@ -1,0 +1,83 @@
+# ======================================================
+# PROGRAM CANDIDATE ELIMINATION
+# Prediksi Aktivitas Olahraga Berdasarkan Kondisi Cuaca
+# ======================================================
+
+print("=== IMPLEMENTASI ALGORITMA CANDIDATE ELIMINATION ===\n")
+
+# Dataset yang digunakan
+data = [
+    ['Cerah', 'Normal', 'Pelan', 'Ya'],
+    ['Cerah', 'Tinggi', 'Pelan', 'Ya'],
+    ['Hujan', 'Tinggi', 'Pelan', 'Tidak'],
+    ['Cerah', 'Normal', 'Kencang', 'Ya']
+]
+
+# Menampilkan dataset
+print("Dataset:\n")
+for i, d in enumerate(data, start=1):
+    print(f"Data ke-{i} : {d}")
+
+# Memisahkan atribut dan label
+konsep = [row[:-1] for row in data]
+target = [row[-1] for row in data]
+
+# Inisialisasi hipotesis spesifik dan general
+S = konsep[0].copy()
+G = [['?', '?', '?']]
+
+print("\n----------------------------------")
+print("Hipotesis Awal")
+print("----------------------------------")
+print("S =", S)
+print("G =", G)
+
+# Proses Candidate Elimination
+for i, h in enumerate(konsep):
+
+    print(f"\n=== Proses Data ke-{i+1} ===")
+    print("Input Data  :", h)
+    print("Klasifikasi :", target[i])
+
+    # Jika contoh positif
+    if target[i] == 'Ya':
+
+        for x in range(len(S)):
+            if h[x] != S[x]:
+                S[x] = '?'
+
+        # Menyaring hipotesis general
+        G = [g for g in G if all(
+            g[x] == '?' or g[x] == h[x]
+            for x in range(len(h))
+        )]
+
+    # Jika contoh negatif
+    elif target[i] == 'Tidak':
+
+        G_baru = []
+
+        for x in range(len(S)):
+            if h[x] != S[x]:
+                hipotesis = ['?', '?', '?']
+                hipotesis[x] = S[x]
+                G_baru.append(hipotesis)
+
+        G = G_baru
+
+    print("Hipotesis S :", S)
+    print("Hipotesis G :", G)
+
+# Hasil akhir
+print("\n===================================")
+print("HASIL AKHIR CANDIDATE ELIMINATION")
+print("===================================")
+
+print("Specific Hypothesis (S) =", S)
+print("General Hypothesis (G) =", G)
+
+print("\nKesimpulan:")
+print("Sistem memprediksi seseorang akan berolahraga")
+print("jika kondisi cuaca 'Cerah', sedangkan atribut")
+print("lain seperti temperatur dan kecepatan angin")
+print("dapat bernilai apa saja.")

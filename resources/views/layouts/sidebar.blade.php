@@ -179,7 +179,7 @@
                                         </div>
                                     @else
                                         <!-- Simple Menu Item -->
-                                        <a href="{{ $item['path'] }}" class="menu-item group"
+                                        {{-- <a href="{{ $item['path'] }}" class="menu-item group"
                                             :class="[
                                                 isActive('{{ $item['path'] }}') ? 'menu-item-active' :
                                                 'menu-item-inactive',
@@ -207,7 +207,64 @@
                                                     </span>
                                                 @endif
                                             </span>
+                                        </a> --}}
+                                        @if (!empty($item['logout']))
+                                        <form method="POST" action="{{ $item['path'] }}">
+                                            @csrf
+
+                                            <button type="submit"
+                                                class="menu-item group w-full"
+                                                :class="[
+                                                    'menu-item-inactive',
+                                                    (!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen) ?
+                                                    'xl:justify-center' :
+                                                    'justify-start'
+                                                ]">
+
+                                                <span class="menu-item-icon-inactive">
+                                                    {!! MenuHelper::getIconSvg($item['icon']) !!}
+                                                </span>
+
+                                                <span
+                                                    x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
+                                                    class="menu-item-text">
+
+                                                    {{ $item['name'] }}
+
+                                                </span>
+
+                                            </button>
+                                        </form>
+
+                                        @else
+
+                                        <a href="{{ $item['path'] }}" class="menu-item group"
+                                            :class="[
+                                                isActive('{{ $item['path'] }}') ? 'menu-item-active' :
+                                                'menu-item-inactive',
+                                                (!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen) ?
+                                                'xl:justify-center' :
+                                                'justify-start'
+                                            ]">
+
+                                            <span
+                                                :class="isActive('{{ $item['path'] }}') ? 'menu-item-icon-active' :
+                                                    'menu-item-icon-inactive'">
+
+                                                {!! MenuHelper::getIconSvg($item['icon']) !!}
+                                            </span>
+
+                                            <span
+                                                x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
+                                                class="menu-item-text flex items-center gap-2">
+
+                                                {{ $item['name'] }}
+
+                                            </span>
+
                                         </a>
+
+                                        @endif
                                     @endif
                                 </li>
                             @endforeach
@@ -216,6 +273,8 @@
                 @endforeach
             </div>
         </nav>
+
+        
 
         <!-- Sidebar Widget -->
         <div x-data x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen" x-transition class="mt-auto">

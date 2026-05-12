@@ -4,6 +4,7 @@
     <x-common.page-breadcrumb pageTitle="All Organizations" />
      <div class="p-6 border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
 
+        
         <!-- GRID -->
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7">
 

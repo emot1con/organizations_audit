@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrganizationPageController;
 use Illuminate\Support\Facades\Route;
 // use App\Http\Controllers\DashboardController;   
@@ -9,10 +10,17 @@ Route::get('/', function () {
     return view('pages.dashboard', ['title' => 'Organizations Dashboard']);
 })->name('dashboard');
 
+Route::post('/register', [AuthController::class, 'register'])
+    ->name('register.process');
 
+Route::post('/login', [AuthController::class, 'login'])
+    ->name('login.process');
+
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->name('logout');
 
 // Organizations
-Route::resource('organizations', OrganizationPageController::class);
+Route::resource('organizations', OrganizationPageController::class)->middleware('auth');
 
 Route::get('/create-organizations', function () {
     return view('pages.organizations.create', ['title' => 'Buat Organisasi ']);
@@ -64,12 +72,12 @@ Route::get('/bar-chart', function () {
 
 
 // authentication pages
-Route::get('/signin', function () {
-    return view('pages.auth.signin', ['title' => 'Sign In']);
+Route::get('/login', function () {
+    return view('pages.auth.login', ['title' => 'Sign In']);
 })->name('signin');
 
-Route::get('/signup', function () {
-    return view('pages.auth.signup', ['title' => 'Sign Up']);
+Route::get('/register', function () {
+    return view('pages.auth.register', ['title' => 'Sign Up']);
 })->name('signup');
 
 // ui elements pages

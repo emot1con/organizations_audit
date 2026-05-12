@@ -97,8 +97,11 @@
             class="items-center justify-between w-full gap-4 px-5 py-4 xl:flex shadow-theme-md xl:justify-end xl:px-0 xl:shadow-none">
             <div class="flex items-center gap-2 2xsm:gap-3">
 
-               <a href="create-organizations" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl  transition-all duration-200">
+                @auth
+                    <a href="create-organizations" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl  transition-all duration-200">
                     <span>Buat Organisasi</span>
+                @endauth
+               
 
                 </a>
                 <!-- Theme Toggle Button -->
