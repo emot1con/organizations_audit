@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Api\AuthController as ApiAuthController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\MemberController;
@@ -10,13 +10,13 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TransactionController;
 
 Route::middleware('throttle:auth')->group(function () {
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [ApiAuthController::class, 'register']);
+    Route::post('/login', [ApiAuthController::class, 'login']);
 });
 
 Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/logout', [ApiAuthController::class, 'logout']);
+    Route::get('/me', [ApiAuthController::class, 'me']);
     
     // Rute Organisasi
     // Route::apiResource('organizations', OrganizationController::class)->except(['create', 'edit']);
