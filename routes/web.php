@@ -1,14 +1,15 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrganizationPageController;
 use Illuminate\Support\Facades\Route;
 // use App\Http\Controllers\DashboardController;   
 
 // dashboard pages
-Route::get('/', function () {
-    return view('pages.dashboard', ['title' => 'Organizations Dashboard']);
-})->name('dashboard');
+Route::get('/', [DashboardController::class, 'index'])
+    ->middleware('auth')
+    ->name('dashboard');
 
 Route::post('/register', [AuthController::class, 'register'])
     ->name('register.process');
@@ -22,9 +23,9 @@ Route::post('/logout', [AuthController::class, 'logout'])
 // Organizations
 Route::resource('organizations', OrganizationPageController::class)->middleware('auth');
 
-Route::get('/create-organizations', function () {
-    return view('pages.organizations.create', ['title' => 'Buat Organisasi ']);
-})->name('organizations-create');
+// Route::get('/create-organizations', function () {
+//     return view('pages.organizations.create', ['title' => 'Buat Organisasi ']);
+// })->name('organizations-create');
 
 
 
@@ -74,7 +75,7 @@ Route::get('/bar-chart', function () {
 // authentication pages
 Route::get('/login', function () {
     return view('pages.auth.login', ['title' => 'Sign In']);
-})->name('signin');
+})->name('login');
 
 Route::get('/register', function () {
     return view('pages.auth.register', ['title' => 'Sign Up']);

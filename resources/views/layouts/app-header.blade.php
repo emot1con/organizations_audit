@@ -98,7 +98,7 @@
             <div class="flex items-center gap-2 2xsm:gap-3">
 
                 @auth
-                    <a href="create-organizations" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl  transition-all duration-200">
+                    <a href="/organizations/create" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl  transition-all duration-200">
                     <span>Buat Organisasi</span>
                 @endauth
                
