@@ -1,25 +1,133 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OrganizationPageController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Web\AuthController;
-use App\Http\Controllers\Web\DashboardController;
+// use App\Http\Controllers\DashboardController;   
 
-// Rujukan dasar, bisa ke login
-Route::get('/', function () {
-    return redirect()->route('login');
+// dashboard pages
+Route::get('/', [DashboardController::class, 'index'])
+    ->middleware('auth')
+    ->name('dashboard');
+
+Route::post('/register', [AuthController::class, 'register'])
+    ->name('register.process');
+
+Route::post('/login', [AuthController::class, 'login'])
+    ->name('login.process');
+
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->name('logout');
+
+// Organizations
+Route::resource('organizations', OrganizationPageController::class)->middleware('auth');
+
+// Route::get('/create-organizations', function () {
+//     return view('pages.organizations.create', ['title' => 'Buat Organisasi ']);
+// })->name('organizations-create');
+
+
+
+
+
+// calender pages
+Route::get('/calendar', function () {
+    return view('pages.calender', ['title' => 'Calendar']);
+})->name('calendar');
+
+// profile pages
+Route::get('/profile', function () {
+    return view('pages.profile', ['title' => 'Profile']);
+})->name('profile');
+
+// form pages
+Route::get('/form-elements', function () {
+    return view('pages.form.form-elements', ['title' => 'Form Elements']);
+})->name('form-elements');
+
+// tables pages
+Route::get('/basic-tables', function () {
+    return view('pages.tables.basic-tables', ['title' => 'Basic Tables']);
+})->name('basic-tables');
+
+// pages
+
+Route::get('/blank', function () {
+    return view('pages.blank', ['title' => 'Blank']);
+})->name('blank');
+
+// error pages
+Route::get('/error-404', function () {
+    return view('pages.errors.error-404', ['title' => 'Error 404']);
+})->name('error-404');
+
+// chart pages
+Route::get('/line-chart', function () {
+    return view('pages.chart.line-chart', ['title' => 'Line Chart']);
+})->name('line-chart');
+
+Route::get('/bar-chart', function () {
+    return view('pages.chart.bar-chart', ['title' => 'Bar Chart']);
+})->name('bar-chart');
+
+
+// authentication pages
+Route::get('/login', function () {
+    return view('pages.auth.login', ['title' => 'Sign In']);
+})->name('login');
+
+Route::get('/register', function () {
+    return view('pages.auth.register', ['title' => 'Sign Up']);
+})->name('signup');
+
+// ui elements pages
+Route::get('/alerts', function () {
+    return view('pages.ui-elements.alerts', ['title' => 'Alerts']);
+})->name('alerts');
+
+Route::get('/avatars', function () {
+    return view('pages.ui-elements.avatars', ['title' => 'Avatars']);
+})->name('avatars');
+
+Route::get('/badge', function () {
+    return view('pages.ui-elements.badges', ['title' => 'Badges']);
+})->name('badges');
+
+Route::get('/buttons', function () {
+    return view('pages.ui-elements.buttons', ['title' => 'Buttons']);
+})->name('buttons');
+
+Route::get('/image', function () {
+    return view('pages.ui-elements.images', ['title' => 'Images']);
+})->name('images');
+
+Route::get('/videos', function () {
+    return view('pages.ui-elements.videos', ['title' => 'Videos']);
+})->name('videos');
+
+
+Route::fallback(function () {
+    return response()->view('pages.errors.error-404', [], 404);
 });
 
-// Middleware guest & throttle otentikasi
-Route::middleware(['guest', 'throttle:auth'])->group(function () {
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
-    
-    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
-});
 
-// Routing ke Dashboard yang diamankan middleware Auth
-Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

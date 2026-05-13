@@ -1,120 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    @include("../../partials/head/head-meta")
-    <title>Maintenance | Dasher - Responsive Bootstrap 5 Admin Dashboard</title>
-    @include("../../partials/head/head-links")
+    <!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta content="Codescandy" name="author">
+    <title>404 error | Dasher - Responsive Bootstrap 5 Admin Dashboard</title>
+    <!-- Favicon icon-->
+<link rel="apple-touch-icon" sizes="57x57" href="../../assets/images/favicon/apple-icon-57x57.png" />
+<link rel="apple-touch-icon" sizes="60x60" href="../../assets/images/favicon/apple-icon-60x60.png" />
+<link rel="apple-touch-icon" sizes="72x72" href="../../assets/images/favicon/apple-icon-72x72.png" />
+<link rel="apple-touch-icon" sizes="76x76" href="../../assets/images/favicon/apple-icon-76x76.png" />
+<link rel="apple-touch-icon" sizes="114x114" href="../../assets/images/favicon/apple-icon-114x114.png" />
+<link rel="apple-touch-icon" sizes="120x120" href="../../assets/images/favicon/apple-icon-120x120.png" />
+<link rel="apple-touch-icon" sizes="144x144" href="../../assets/images/favicon/apple-icon-144x144.png" />
+<link rel="apple-touch-icon" sizes="152x152" href="../../assets/images/favicon/apple-icon-152x152.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../../assets/images/favicon/apple-icon-180x180.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="../../assets/images/favicon/android-icon-192x192.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="../../assets/images/favicon/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="96x96" href="../../assets/images/favicon/favicon-96x96.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="../../assets/images/favicon/favicon-16x16.png" />
+
+<meta name="msapplication-TileColor" content="#ffffff" />
+<meta name="msapplication-TileImage" content="../../assets/images/favicon/ms-icon-144x144.png" />
+<meta name="theme-color" content="#ffffff" />
+<!-- Color modes -->
+<script src="../../assets/js/vendors/color-modes.js"></script>
+<script>
+  if (localStorage.getItem('sidebarExpanded') === 'false') {
+    document.documentElement.classList.add('collapsed');
+    document.documentElement.classList.remove('expanded');
+  } else {
+    document.documentElement.classList.remove('collapsed');
+    document.documentElement.classList.add('expanded');
+  }
+</script>
+<!-- Libs CSS -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&display=swap" />
+<link rel="stylesheet" href="../../node_modules/simplebar/dist/simplebar.min.css" />
+<link rel="stylesheet" href="../../node_modules/@tabler/icons-webfont/tabler-icons.min.css" />
+
+<!-- Theme CSS -->
+<!-- build:css ../../assets/css/theme.min.css -->
+<link rel="stylesheet" href="../../assets/css/theme.css" />
+<!-- endbuild -->
+
   </head>
 
   <body>
-    <main>
-      <section class="container justify-content-center align-items-center d-flex flex-column vh-100">
-        <div class="row text-center">
+    <main class="vh-100 d-flex align-items-center justify-content-center">
+      <section class="container">
+        <!-- row -->
+        <div class="row justify-content-center">
+          <!-- col -->
           <div class="col-12">
-            <div>
-              <h1>Site is Under Maintenance</h1>
-              <p>We're making the system more awesome. We'll be back shortly.</p>
-            </div>
-            <div>
-              <img src="../../assets/images/svg/maintenance.svg" alt="Image" style="width: 500px" />
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="offset-xl-1 col-xl-10 col-12">
-            <div class="row">
-              <div class="col-md-4 col-12">
-                <div class="mb-4 mb-lg-0">
-                  <div class="d-flex flex-column gap-4">
-                    <div>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="icon icon-tabler icon-tabler-device-desktop text-primary"
-                        width="40"
-                        height="40"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        fill="none"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M3 5a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1v-10z" />
-                        <path d="M7 20h10" />
-                        <path d="M9 16v4" />
-                        <path d="M15 16v4" />
-                      </svg>
-                    </div>
-
-                    <div>
-                      <h3 class="fs-5">Why is the site down?</h3>
-                      <p class="mb-0">it can be due to an error with your DNS settings, hosting provider, or web applications.</p>
-                    </div>
-                  </div>
-                </div>
+            <!-- content -->
+            <div class="text-center">
+              <div>
+                <!-- img -->
+                <img src="../../assets/images/svg/404.svg" alt="Image" class="img-fluid" />
               </div>
-              <div class="col-md-4 col-12">
-                <div class="mb-4 mb-lg-0">
-                  <div class="d-flex flex-column gap-4">
-                    <div>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="icon icon-tabler icon-tabler-clock text-primary"
-                        width="40"
-                        height="40"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        fill="none"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
-                        <path d="M12 7v5l3 3" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 class="fs-5">What is downtime?</h3>
-                      <p class="mb-0">A machine is not operating or being productive due to required maintenance work.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4 col-12">
-                <div class="mb-4 mb-lg-0">
-                  <div class="d-flex flex-column gap-4">
-                    <div>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="icon icon-tabler icon-tabler-lifebuoy text-primary"
-                        width="40"
-                        height="40"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        fill="none"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
-                        <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
-                        <path d="M15 15l3.35 3.35" />
-                        <path d="M9 15l-3.35 3.35" />
-                        <path d="M5.65 5.65l3.35 3.35" />
-                        <path d="M18.35 5.65l-3.35 3.35" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 class="fs-5">Do you need support?</h3>
-                      <p>In emergrancy, our team will help you. Just drop a message to the</p>
-                      <a href="#!" class="text-inherit">Dasher@example.com</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <!-- text -->
+              <h1 class="display-4">Oops! the page not found.</h1>
+              <p class="mb-6 fs-5">Or simply leverage the expertise of our consultation team.</p>
+              <!-- button -->
+              <a href="../../index.html" class="btn btn-primary btn-lg">Go Home</a>
             </div>
           </div>
         </div>
@@ -149,6 +101,25 @@
       </div>
     </main>
 
-    @include("../../partials/scripts")
+    <!-- Libs JS -->
+<script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../node_modules/simplebar/dist/simplebar.min.js"></script>
+
+<!-- Theme JS -->
+<!-- build:js ../../assets/js/theme.min.js -->
+<script src="../../assets/js/main.js"></script>
+<!-- endbuild -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <p class="text-center">© All rights reserved by <a href="https://codescandy.com" target="_blank">CodesCandy</a>. Distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a>.</p>
+</body>
+</html>
+
   </body>
 </html>

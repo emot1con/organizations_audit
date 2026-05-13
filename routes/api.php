@@ -19,7 +19,7 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     
     // Rute Organisasi
-    Route::apiResource('organizations', OrganizationController::class)->except(['create', 'edit']);
+    // Route::apiResource('organizations', OrganizationController::class)->except(['create', 'edit']);
     
     // Rute Divisi
     Route::apiResource('organizations.divisions', DivisionController::class)->shallow()->except(['create', 'edit']);

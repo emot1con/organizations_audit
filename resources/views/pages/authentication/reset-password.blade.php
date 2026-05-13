@@ -1,9 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    @@include("../../partials/head/head-meta.html")
+    <!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta content="Codescandy" name="author">
     <title>Otp varification | Dasher - Responsive Bootstrap 5 Admin Dashboard</title>
-    @@include("../../partials/head/head-links.html")
+    <!-- Favicon icon-->
+<link rel="apple-touch-icon" sizes="57x57" href="../../assets/images/favicon/apple-icon-57x57.png" />
+<link rel="apple-touch-icon" sizes="60x60" href="../../assets/images/favicon/apple-icon-60x60.png" />
+<link rel="apple-touch-icon" sizes="72x72" href="../../assets/images/favicon/apple-icon-72x72.png" />
+<link rel="apple-touch-icon" sizes="76x76" href="../../assets/images/favicon/apple-icon-76x76.png" />
+<link rel="apple-touch-icon" sizes="114x114" href="../../assets/images/favicon/apple-icon-114x114.png" />
+<link rel="apple-touch-icon" sizes="120x120" href="../../assets/images/favicon/apple-icon-120x120.png" />
+<link rel="apple-touch-icon" sizes="144x144" href="../../assets/images/favicon/apple-icon-144x144.png" />
+<link rel="apple-touch-icon" sizes="152x152" href="../../assets/images/favicon/apple-icon-152x152.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../../assets/images/favicon/apple-icon-180x180.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="../../assets/images/favicon/android-icon-192x192.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="../../assets/images/favicon/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="96x96" href="../../assets/images/favicon/favicon-96x96.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="../../assets/images/favicon/favicon-16x16.png" />
+
+<meta name="msapplication-TileColor" content="#ffffff" />
+<meta name="msapplication-TileImage" content="../../assets/images/favicon/ms-icon-144x144.png" />
+<meta name="theme-color" content="#ffffff" />
+<!-- Color modes -->
+<script src="../../assets/js/vendors/color-modes.js"></script>
+<script>
+  if (localStorage.getItem('sidebarExpanded') === 'false') {
+    document.documentElement.classList.add('collapsed');
+    document.documentElement.classList.remove('expanded');
+  } else {
+    document.documentElement.classList.remove('collapsed');
+    document.documentElement.classList.add('expanded');
+  }
+</script>
+<!-- Libs CSS -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&display=swap" />
+<link rel="stylesheet" href="../../node_modules/simplebar/dist/simplebar.min.css" />
+<link rel="stylesheet" href="../../node_modules/@tabler/icons-webfont/tabler-icons.min.css" />
+
+<!-- Theme CSS -->
+<!-- build:css ../../assets/css/theme.min.css -->
+<link rel="stylesheet" href="../../assets/css/theme.css" />
+<!-- endbuild -->
+
   </head>
 
   <body>
@@ -15,7 +58,7 @@
             <div class="col-xl-4 offset-xl-4 col-md-12 col-12">
               <div class="text-center">
                 <a href="../../index.html" class="fs-2 fw-bold d-flex align-items-center gap-2 justify-content-center mb-6">
-                  <img src="@@webRoot/assets/images/brand/logo/logo-icon.svg" alt="" />
+                  <img src="../../assets/images/brand/logo/logo-icon.svg" alt="" />
                   <span>Dasher</span>
                 </a>
                 <h1 class="mb-1">Set new password</h1>
@@ -91,7 +134,26 @@
       </div>
     </main>
 
-    @@include("../../partials/scripts.html")
-    <script src="@@webRoot/assets/js/vendors/password.js"></script>
+    <!-- Libs JS -->
+<script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../node_modules/simplebar/dist/simplebar.min.js"></script>
+
+<!-- Theme JS -->
+<!-- build:js ../../assets/js/theme.min.js -->
+<script src="../../assets/js/main.js"></script>
+<!-- endbuild -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <p class="text-center">© All rights reserved by <a href="https://codescandy.com" target="_blank">CodesCandy</a>. Distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a>.</p>
+</body>
+</html>
+
+    <script src="../../assets/js/vendors/password.js"></script>
   </body>
 </html>
