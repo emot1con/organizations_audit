@@ -30,7 +30,7 @@ class OrganizationController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'organizations_cash' => 'required|bigInteger',
+            'organizations_cash' => 'required|numeric|min:0',
             'contact' => 'nullable|string|max:255',
         ]);
 
@@ -49,6 +49,7 @@ class OrganizationController extends Controller
                 'description' => $validated['description'] ?? null,
                 'contact' => $validated['contact'] ?? null,
                 'organizations_cash' => $validated['organizations_cash'] ?? null,
+                'owner_id' => $request->user()->id,
             ]);
 
             // 3. Hubungkan User yang membuat dengan Organisasi baru sebagai 'admin'

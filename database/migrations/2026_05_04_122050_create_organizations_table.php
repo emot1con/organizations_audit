@@ -9,6 +9,10 @@ return new class extends Migration {
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->foreignId('owner_id')
+            ->nullable()
+            ->constrained('users')
+            ->nullOnDelete();
             $table->text('description')->nullable();
             $table->decimal('organizations_cash', 15, 2)->default(0);
             $table->string('contact')->nullable();

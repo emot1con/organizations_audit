@@ -22,7 +22,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role_id' => 2, //default dulu, nanti diubah
+            'role_id' => null, //default dulu, nanti diubah
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;

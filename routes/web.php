@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\OrganizationPageController;
 use Illuminate\Support\Facades\Route;
 // use App\Http\Controllers\DashboardController;   
@@ -26,6 +27,9 @@ Route::resource('organizations', OrganizationPageController::class)->middleware(
 // Route::get('/create-organizations', function () {
 //     return view('pages.organizations.create', ['title' => 'Buat Organisasi ']);
 // })->name('organizations-create');
+
+// Divisi
+Route::resource('divisions', DivisionController::class);
 
 
 
