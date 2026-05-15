@@ -52,9 +52,7 @@ Route::get('/calendar', function () {
 })->name('calendar');
 
 // profile pages
-Route::get('/profile', function () {
-    return view('pages.profile', ['title' => 'Profile']);
-})->name('profile');
+Route::get('/profile', [AuthController::class, 'me'])->middleware('auth')->name('profile');
 
 // form pages
 Route::get('/form-elements', function () {

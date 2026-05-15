@@ -102,8 +102,9 @@ class AuthController extends Controller
         // Akan mengembalikan data user saat ini beserta organisasinya nanti
         $user = $request->user()->load('userOrganizations.organization', 'userOrganizations.division', 'userOrganizations.role');
         
-        return response()->json([
-            'data' => $user
+        return view('pages.profile', [
+            'title' => 'Profile',
+            'user' => $user
         ]);
     }
 }
