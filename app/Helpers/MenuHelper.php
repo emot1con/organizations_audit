@@ -90,11 +90,11 @@ class MenuHelper
             $items[] = [
                 'icon' => 'logout',
                 'name' => 'Logout',
-                'path' => '/logout',
+                'path' => route('logout'),
                 'logout' => true,
             ];
         }
-
+    
         return $items;
     }
 

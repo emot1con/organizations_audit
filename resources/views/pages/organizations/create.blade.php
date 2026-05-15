@@ -29,6 +29,27 @@
                         value=""
                     />
 
+                    <x-form.input.select
+                    class="mb-5"
+                    label="Kategori Organisasi"
+                    name="category"
+                    placeholder="Pilih kategori organisasi"
+                    :options="[
+                        '1' => 'Himpunan',
+                        '2' => 'BEM',
+                        '3' => 'UKM',
+                    ]"
+                />
+
+                    <x-form.input.input
+                        class="mb-5"
+                        label="Kode Join Organisasi"
+                        type="text"
+                        name="password_organization"
+                        placeholder="Masukkan Kode Untuk verifikasi User Join"
+                        value=""
+                    />
+
                     <x-form.input.input
                         class="mb-5"
                         label="Email Organisasi"

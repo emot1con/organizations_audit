@@ -62,35 +62,12 @@ class TransactionController extends Controller
         return response()->json($transactions);
     }
 
-    #[OA\Post(
-        path: "/api/organizations/{org_id}/transactions",
-        summary: "Create a new transaction",
-        security: [["sanctum" => []]],
-        tags: ["Transactions"],
-        parameters: [
-            new OA\Parameter(name: "org_id", in: "path", required: true, description: "Organization ID", schema: new OA\Schema(type: "integer"))
-        ],
-        requestBody: new OA\RequestBody(
-            required: true,
-            content: new OA\JsonContent(
-                required: ["category_id", "amount", "transaction_date"],
-                properties: [
-                    new OA\Property(property: "division_id", type: "integer", nullable: true),
-                    new OA\Property(property: "category_id", type: "integer"),
-                    new OA\Property(property: "amount", type: "number", format: "float"),
-                    new OA\Property(property: "description", type: "string", nullable: true),
-                    new OA\Property(property: "proof_url", type: "string", format: "uri", nullable: true),
-                    new OA\Property(property: "transaction_date", type: "string", format: "date")
-                ]
-            )
-        ),
-        responses: [
-            new OA\Response(response: 201, description: "Transaction created"),
-            new OA\Response(response: 403, description: "Division cross-validation failed"),
-            new OA\Response(response: 422, description: "Validation error")
-        ]
-    )]
-    public function store(Request $request, $organization)
+    public function create($id) {
+        // harus tau dulu ini ngambil dari organization atau division
+        return view('pages.transactions.create');
+    }
+
+    public function store(Request $request)
     {
         Gate::authorize('create', [Transaction::class, $organization]);
 
