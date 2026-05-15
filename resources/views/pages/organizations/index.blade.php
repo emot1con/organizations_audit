@@ -63,18 +63,38 @@
 
                     </p>
 
+                    @php
+
+                        $isJoined = $organization->userOrganizations
+                            ->contains('user_id', auth()->id());
+
+                    @endphp
+
                     <div class="flex items-center justify-between mt-6">
 
                         <span class="text-gray-500 dark:text-gray-400 text-sm">
                             👥 {{ $organization->userOrganizations->count() }} Member
                         </span>
 
-                        <a href="{{ route('organizations.show', $organization) }}"
-                            class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-xl transition">
+                        @if($isJoined)
 
-                            Lihat
+                            <a href="{{ route('organizations.show', $organization) }}"
+                                class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-xl transition">
 
-                        </a>
+                                Lihat
+
+                            </a>
+
+                        @else
+
+                            <a href="{{ route('organization.memberJoin.create', $organization) }}"
+                                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl transition">
+
+                                Enroll
+
+                            </a>
+
+                        @endif
 
                     </div>
 

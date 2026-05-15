@@ -27,10 +27,9 @@ class DivisionController extends Controller
      */
     public function create(Organization $organization)
     {
-        $this->authorizeOrganizationAccess($organization);
+        // $this->authorizeOrganizationAccess($organization);
 
-        return view('divisions.create', compact('organization'));
-    }
+        return view('pages.divisions.create');    }
 
     /**
      * Store division
@@ -74,13 +73,14 @@ class DivisionController extends Controller
      */
     public function show(Division $division)
     {
-        $this->authorizeDivisionAccess($division);
+        // $this->authorizeDivisionAccess($division);
 
         $division->load([
             'organization',
             'userOrganizations.user',
             'transactions',
         ]);
+        
 
         return view('pages.divisions.show', compact('division'));
     }

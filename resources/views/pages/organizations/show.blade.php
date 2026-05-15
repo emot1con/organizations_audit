@@ -26,10 +26,17 @@
             {{-- Action Buttons --}}
             <div class="flex gap-3">
 
-                <a href="/transactions/create"
+                <a href="{{ route('organizations.transactions.create', $organization) }}"
                     class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600 transition">
 
                     Tambah Transaksi
+
+                </a>
+
+                <a href="{{ route('organizations.transactions.index', $organization) }}"
+                    class="inline-flex items-center justify-center rounded-xl bg-green-600 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-green-800 transition">
+
+                    Lihat Transaksi
 
                 </a>
 

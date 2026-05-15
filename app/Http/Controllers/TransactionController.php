@@ -13,6 +13,11 @@ class TransactionController extends Controller
         return response()->json($transactions);
     }
 
+    public function create($id) {
+        // harus tau dulu ini ngambil dari organization atau division
+        return view('pages.transactions.create');
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([

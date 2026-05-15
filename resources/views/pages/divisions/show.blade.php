@@ -40,21 +40,23 @@
             {{-- Action Buttons --}}
             <div class="flex gap-3">
 
-                <a href="/transactions/create"
+                <a href="{{ route('divisions.transactions.create', $division) }}"
                     class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600 transition">
 
                     Tambah Transaksi
 
                 </a>
 
-                <a href="/permissions/index"
-                    class="inline-flex items-center justify-center rounded-xl bg-amber-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-amber-600 transition">
+                <a href="{{ route('divisions.transactions.index', $division) }}"
+                    class="inline-flex items-center justify-center rounded-xl bg-green-600 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-green-800 transition">
 
-                    Permission
+                    Lihat Transaksi
 
-                </a>
+                </a>    
 
-                <a href="/divisions/{{ $division->id }}/edit"
+                
+
+                <a href="/divisions/1/edit"
                     class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.05] transition">
 
                     ⚙ Settings
@@ -148,12 +150,6 @@
                     placeholder="Search member..."
                     class="h-11 rounded-xl border border-gray-300 bg-transparent px-4 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-white xl:w-[280px]">
 
-                <a href="#"
-                    class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600 transition">
-
-                    + Tambah Member
-
-                </a>
 
             </div>
 
