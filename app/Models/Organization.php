@@ -13,6 +13,8 @@ class Organization extends Model
     protected $fillable = [
         'name',
         'description',
+        'category_organizations',
+        'password_organizations',
         'organizations_cash',
         'contact',
         'owner_id',

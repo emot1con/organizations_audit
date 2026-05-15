@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             // division_id penting untuk scoping jika transaksi ada di level divisi
             $table->foreignId('division_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
+            $table->string('category');
             
             $table->decimal('amount', 15, 2);
             $table->text('description')->nullable();

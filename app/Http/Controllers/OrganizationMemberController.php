@@ -28,9 +28,37 @@ class OrganizationMemberController extends Controller
     /**
      * Store a newly created resource in storage
      */
-    public function store(Request $request)
+    public function store(Request $request, Organization $organization)
     {
-        //
+        $request->validate([
+            'password_organization' => 'required|string',
+        ]);
+
+        if (!\Illuminate\Support\Facades\Hash::check($request->password_organization, $organization->password_organizations)) {
+            return back()->withErrors(['password_organization' => 'Kode organisasi salah.']);
+        }
+
+        $exists = \App\Models\UserOrganization::where('user_id', auth()->id())
+            ->where('organization_id', $organization->id)
+            ->exists();
+
+        if ($exists) {
+            return back()->with('error', 'Anda sudah bergabung dalam organisasi ini.');
+        }
+
+        $role = \App\Models\OrganizationRole::firstOrCreate([
+            'name' => 'anggota',
+            'scope' => 'organization',
+        ]);
+
+        \App\Models\UserOrganization::create([
+            'user_id' => auth()->id(),
+            'organization_id' => $organization->id,
+            'role_id' => $role->id,
+            'division_id' => null,
+        ]);
+
+        return redirect()->route('organizations.index')->with('success', 'Berhasil bergabung dengan organisasi.');
     }
 
     /**
@@ -52,9 +80,22 @@ class OrganizationMemberController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Organization $organization, string $id)
     {
-        //
+        $request->validate([
+            'role_id' => 'required|exists:organization_roles,id',
+            'division_id' => 'nullable|exists:divisions,id',
+        ]);
+
+        $userOrganization = \App\Models\UserOrganization::where('organization_id', $organization->id)
+            ->findOrFail($id);
+
+        $userOrganization->update([
+            'role_id' => $request->role_id,
+            'division_id' => $request->division_id,
+        ]);
+
+        return back()->with('success', 'Data anggota berhasil diperbarui.');
     }
 
     /**

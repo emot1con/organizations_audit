@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\User;
-use App\Models\Category;
 use App\Models\Organization;
 use App\Models\Transaction;
 
@@ -18,7 +17,7 @@ class TransactionFactory extends Factory
         return [
             'organization_id' => Organization::factory(),
             'division_id' => null,
-            'category_id' => Category::factory(),
+            'category' => 'Dummy Category',
             'amount' => 50000,
             'description' => 'Transaksi dummy',
             'proof_url' => 'dummy.jpg',

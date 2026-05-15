@@ -14,6 +14,8 @@ return new class extends Migration {
             ->constrained('users')
             ->nullOnDelete();
             $table->text('description')->nullable();
+            $table->string('category_organizations')->nullable();
+            $table->string('password_organizations')->nullable();
             $table->decimal('organizations_cash', 15, 2)->default(0);
             $table->string('contact')->nullable();
             $table->timestamps();

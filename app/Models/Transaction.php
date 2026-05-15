@@ -13,7 +13,7 @@ class Transaction extends Model
     protected $fillable = [
         'organization_id',
         'division_id',
-        'category_id',
+        'category',
         'amount',
         'description',
         'proof_url',
@@ -37,11 +37,6 @@ class Transaction extends Model
     public function division()
     {
         return $this->belongsTo(Division::class);
-    }
-
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
     }
 
     public function creator()

@@ -14,6 +14,8 @@ class OrganizationFactory extends Factory
         return [
             'name' => 'Organization Dummy',
             'description' => 'Description Dummy',
+            'category_organizations' => $this->faker->word,
+            'password_organizations' => bcrypt('password'),
         ];
     }
 }
