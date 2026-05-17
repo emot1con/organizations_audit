@@ -5,15 +5,45 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up(): void {
+
+    public function up(): void
+    {
         Schema::create('organization_roles', function (Blueprint $table) {
+
             $table->id();
-            $table->string('name'); // admin, bendahara, ketua_divisi, anggota
-            $table->string('scope'); // 'organization' | 'division'
+
+            /**
+             * Organization Owner
+             */
+            $table->foreignId('organization_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            /**
+             * Optional Division
+             * null = role organization
+             */
+            $table->foreignId('division_id')
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete();
+
+            /**
+             * Role Name
+             */
+            $table->string('name');
+
+            /**
+             * organization | division
+             */
+            $table->string('scope');
+
             $table->timestamps();
         });
     }
-    public function down(): void {
+
+    public function down(): void
+    {
         Schema::dropIfExists('organization_roles');
     }
 };

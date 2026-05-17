@@ -39,4 +39,9 @@ class Organization extends Model
     {
         return $this->hasMany(Transaction::class);
     }
+
+    public function roles()
+    {
+        return $this->hasMany(OrganizationRole::class);
+    }
 }

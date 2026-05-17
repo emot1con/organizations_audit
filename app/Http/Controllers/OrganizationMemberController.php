@@ -4,15 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Organization;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrganizationMemberController extends Controller
-{
+    {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+    //
     }
 
     /**
@@ -31,14 +32,14 @@ class OrganizationMemberController extends Controller
     public function store(Request $request, Organization $organization)
     {
         $request->validate([
-            'password_organization' => 'required|string',
+            'password_organizations' => 'required|string',
         ]);
 
-        if (!\Illuminate\Support\Facades\Hash::check($request->password_organization, $organization->password_organizations)) {
-            return back()->withErrors(['password_organization' => 'Kode organisasi salah.']);
+        if (!\Illuminate\Support\Facades\Hash::check($request->password_organizations, $organization->password_organizations)) {
+            return back()->withErrors(['password_organizations' => 'Kode organisasi salah.']);
         }
 
-        $exists = \App\Models\UserOrganization::where('user_id', auth()->id())
+        $exists = \App\Models\UserOrganization::where('user_id', Auth::id())
             ->where('organization_id', $organization->id)
             ->exists();
 
@@ -52,7 +53,7 @@ class OrganizationMemberController extends Controller
         ]);
 
         \App\Models\UserOrganization::create([
-            'user_id' => auth()->id(),
+            'user_id' => Auth::id(),
             'organization_id' => $organization->id,
             'role_id' => $role->id,
             'division_id' => null,

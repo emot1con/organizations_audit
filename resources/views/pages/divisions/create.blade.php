@@ -62,16 +62,7 @@
                     ]"
                 />
 
-                {{-- Division Cash --}}
-                <x-form.input.input
-                    class="mb-5"
-                    label="Password Divisi"
-                    type="text"
-                    name="password_divisi"
-                    placeholder="Masukkan Password Untuk Join Divisi"
-                    value=""
-                />
-
+             
                 {{-- Division Cash --}}
                 <x-form.input.input
                     class="mb-5"

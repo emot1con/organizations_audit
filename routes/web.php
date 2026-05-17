@@ -29,10 +29,6 @@ Route::post('/logout', [AuthController::class, 'logout'])
 // Organizations
 Route::resource('organizations', OrganizationPageController::class)->middleware('auth');
 
-// Route::get('/create-organizations', function () {
-//     return view('pages.organizations.create', ['title' => 'Buat Organisasi ']);
-// })->name('organizations-create');
-
 // Divisi
 Route::resource('divisions', DivisionController::class);
 
@@ -41,7 +37,7 @@ Route::resource('organizations.transactions', TransactionOrganizationController:
 Route::resource('divisions.transactions', TransactionDivisionController::class);
 
 // Join Organization
-Route::resource('organization.memberJoin', OrganizationMemberController::class);
+Route::resource('organization.memberJoin', OrganizationMemberController::class)->middleware('auth');
 
 // Settings
 // Setting Organizations

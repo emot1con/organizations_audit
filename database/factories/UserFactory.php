@@ -2,37 +2,36 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<User>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
 class UserFactory extends Factory
 {
-    protected static ?string $password;
-
+    /**
+     * Define the model's default state.
+     */
     public function definition(): array
     {
-        return [
-            'name' => 'Test User',
+        $name = fake()->firstName() . ' ' . fake()->lastName();
 
-            'email' => 'test' . rand(1,9999) . '@example.com',
+        return [
+            'role_id' => 2,
+
+            'name' => $name,
+
+            'email' => Str::lower(
+                str_replace(' ', '', $name)
+            ) . '@gmail.com',
 
             'email_verified_at' => now(),
 
-            'password' => static::$password ??= Hash::make('password'),
+            'password' => Hash::make('admin123'),
 
-            'remember_token' => Str::random(10),
+            'remember_token' => null,
         ];
-    }
-
-    public function unverified(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);
     }
 }

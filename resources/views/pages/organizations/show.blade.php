@@ -109,7 +109,7 @@
                 Contact
             </span>
 
-            <h2 class="mt-3 text-lg font-bold text-gray-800 dark:text-white">
+            <h2 class="mt-3 text-sm font-bold text-gray-800 break-words dark:text-white">
                 {{ $organization->contact }}
             </h2>
 
