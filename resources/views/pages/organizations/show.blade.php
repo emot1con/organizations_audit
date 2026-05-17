@@ -40,7 +40,7 @@
 
                 </a>
 
-                <a href="/divisions/create"
+                <a href="{{ route('organizations.divisions.create', $organization) }}"
                     class="inline-flex items-center justify-center rounded-xl bg-amber-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-amber-600 transition">
 
                     Buat Divisi
@@ -140,191 +140,141 @@
         {{-- Division Cards --}}
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7">
 
-            {{-- Division Card --}}
-            <div
-                class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
+            @forelse($organization->divisions as $division)
 
-                <img
-                    src="https://images.unsplash.com/photo-1498050108023-c5249f4df085"
-                    class="w-full h-48 object-cover">
+                @php
 
-                <div class="p-6">
+                    $badgeColors = [
+                        'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300',
+                        'bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-300',
+                        'bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-300',
+                        'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300',
+                        'bg-pink-100 text-pink-600 dark:bg-pink-900 dark:text-pink-300',
+                    ];
 
-                    <div class="flex items-center justify-between">
+                    $randomBadge = $badgeColors[array_rand($badgeColors)];
 
-                        <h2 class="text-xl font-bold text-gray-800 dark:text-white">
-                            Divisi IT
-                        </h2>
+                    $images = [
+                        'https://images.unsplash.com/photo-1498050108023-c5249f4df085',
+                        'https://images.unsplash.com/photo-1516321318423-f06f85e504b3',
+                        'https://images.unsplash.com/photo-1522202176988-66273c2fd55f',
+                        'https://images.unsplash.com/photo-1519389950473-47ba0277781c',
+                        'https://images.unsplash.com/photo-1521737604893-d14cc237f11d',
+                    ];
 
-                        <span
-                            class="bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300 text-xs px-3 py-1 rounded-full">
+                    $randomImage = $images[array_rand($images)];
 
-                            Technology
+                @endphp
 
-                        </span>
+                <div
+                    class="flex flex-col h-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
 
-                    </div>
+                    <img
+                        src="{{ $randomImage }}"
+                        class="w-full h-48 object-cover">
 
-                    <p class="text-gray-500 dark:text-gray-400 text-sm mt-3 line-clamp-2">
+                    <div class="flex flex-col flex-1 p-6">
 
-                        Divisi yang bertanggung jawab untuk pengembangan website,
-                        aplikasi, dan seluruh kebutuhan teknologi organisasi.
+                        {{-- Header --}}
+                        <div class="flex items-center justify-between">
 
-                    </p>
+                            <h2 class="text-xl font-bold text-gray-800 dark:text-white">
+                                {{ $division->name }}
+                            </h2>
 
-                    {{-- Stats --}}
-                    <div class="mt-5 flex items-center justify-between">
+                            <span
+                                class="{{ $randomBadge }} text-xs px-3 py-1 rounded-full">
 
-                        <div>
+                                {{ ucfirst($division->category) }}
 
-                            <p class="text-xs text-gray-400">
-                                Member
-                            </p>
-
-                            <h3 class="text-lg font-bold text-gray-800 dark:text-white">
-                                24
-                            </h3>
-
-                        </div>
-
-                        <div>
-
-                            <p class="text-xs text-gray-400">
-                                Keuangan
-                            </p>
-
-                            <h3 class="text-lg font-bold text-gray-800 dark:text-white">
-                                Rp {{ number_format(20000000, 0, ',', '.') }}
-                            </h3>
+                            </span>
 
                         </div>
 
-                        <div>
+                        {{-- Description --}}
+                        <p class="text-gray-500 dark:text-gray-400 text-sm mt-3 line-clamp-2">
 
-                            <p class="text-xs text-gray-400">
-                                Role
-                            </p>
+                            {{ $division->description ?? 'Belum ada deskripsi divisi.' }}
 
-                            <h3 class="text-lg font-bold text-gray-800 dark:text-white">
-                                4
-                            </h3>
+                        </p>
+
+                        {{-- Stats --}}
+                        <div class="mt-5 flex items-center justify-between">
+
+                            <div>
+
+                                <p class="text-xs text-gray-400">
+                                    Member
+                                </p>
+
+                                <h3 class="text-lg font-bold text-gray-800 dark:text-white">
+                                    {{ $division->userOrganizations->count() }}
+                                </h3>
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-xs text-gray-400">
+                                    Keuangan
+                                </p>
+
+                                <h3 class="text-lg font-bold text-gray-800 dark:text-white">
+                                    Rp {{ number_format($division->division_cash, 0, ',', '.') }}
+                                </h3>
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-xs text-gray-400">
+                                    Role
+                                </p>
+
+                                <h3 class="text-lg font-bold text-gray-800 dark:text-white">
+                                    {{ $division->roles->count() }}
+                                </h3>
+
+                            </div>
 
                         </div>
 
-                    </div>
+                        {{-- Footer --}}
+                        <div class="mt-auto flex items-center justify-between pt-6">
 
-                    {{-- Footer --}}
-                    <div class="flex items-center justify-between mt-6">
+                            <span class="text-gray-500 dark:text-gray-400 text-sm">
+                                👥 {{ $division->userOrganizations->count() }} Member
+                            </span>
 
-                        <span class="text-gray-500 dark:text-gray-400 text-sm">
-                            👥 24 Member
-                        </span>
+                            <a href="{{ route('divisions.show', $division) }}"
+                                class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-xl transition">
 
-                        <a href="/divisions/1"
-                            class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-xl transition">
+                                Lihat Divisi
 
-                            Lihat Divisi
+                            </a>
 
-                        </a>
+                        </div>
 
                     </div>
 
                 </div>
 
-            </div>
+            @empty
 
-            {{-- Division Card --}}
-            <div
-                class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
+                <div
+                    class="col-span-full rounded-3xl border border-dashed border-gray-300 dark:border-gray-700 p-12 text-center">
 
-                <img
-                    src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3"
-                    class="w-full h-48 object-cover">
+                    <h3 class="text-xl font-semibold text-gray-700 dark:text-white">
+                        Belum ada divisi
+                    </h3>
 
-                <div class="p-6">
-
-                    <div class="flex items-center justify-between">
-
-                        <h2 class="text-xl font-bold text-gray-800 dark:text-white">
-                            Divisi Media
-                        </h2>
-
-                        <span
-                            class="bg-pink-100 text-pink-600 dark:bg-pink-900 dark:text-pink-300 text-xs px-3 py-1 rounded-full">
-
-                            Creative
-
-                        </span>
-
-                    </div>
-
-                    <p class="text-gray-500 dark:text-gray-400 text-sm mt-3 line-clamp-2">
-
-                        Mengelola branding organisasi, desain konten,
-                        dokumentasi, dan sosial media.
-
+                    <p class="mt-2 text-gray-500 dark:text-gray-400">
+                        Organisasi ini belum memiliki divisi.
                     </p>
-
-                    {{-- Stats --}}
-                    <div class="mt-5 flex items-center justify-between">
-
-                        <div>
-
-                            <p class="text-xs text-gray-400">
-                                Member
-                            </p>
-
-                            <h3 class="text-lg font-bold text-gray-800 dark:text-white">
-                                15
-                            </h3>
-
-                        </div>
-
-                        <div>
-
-                            <p class="text-xs text-gray-400">
-                                Keuangan
-                            </p>
-
-                            <h3 class="text-lg font-bold text-gray-800 dark:text-white">
-                                Rp {{ number_format(5000000, 0, ',', '.') }}
-                            </h3>
-
-                        </div>
-
-                        <div>
-
-                            <p class="text-xs text-gray-400">
-                                Role
-                            </p>
-
-                            <h3 class="text-lg font-bold text-gray-800 dark:text-white">
-                                5
-                            </h3>
-
-                        </div>
-
-                    </div>
-
-                    {{-- Footer --}}
-                    <div class="flex items-center justify-between mt-6">
-
-                        <span class="text-gray-500 dark:text-gray-400 text-sm">
-                            👥 15 Member
-                        </span>
-
-                        <a href="/divisions/1"
-                            class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-xl transition">
-
-                            Lihat Divisi
-
-                        </a>
-
-                    </div>
 
                 </div>
 
-            </div>
+            @endforelse
 
         </div>
 

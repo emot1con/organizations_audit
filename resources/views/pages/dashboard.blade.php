@@ -41,103 +41,96 @@
             <!-- GRID -->
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7">
 
-                @forelse($organizations as $item)
+            @forelse($organizations as $item)
 
-                    @php
-                        $organization = $item->organization;
+                @php
+                    $organization = $item->organization;
 
-                        $categories = [
-                            'Technology',
-                            'Business',
-                            'Education',
-                            'Creative',
-                            'Programming',
-                            'Community'
-                        ];
+                    $badgeColors = [
+                        'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300',
+                        'bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-300',
+                        'bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-300',
+                        'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300',
+                        'bg-pink-100 text-pink-600 dark:bg-pink-900 dark:text-pink-300',
+                    ];
 
-                        $randomCategory = $categories[array_rand($categories)];
+                    $randomBadge = $badgeColors[array_rand($badgeColors)];
+                @endphp
 
-                        $badgeColors = [
-                            'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300',
-                            'bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-300',
-                            'bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-300',
-                            'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300',
-                            'bg-pink-100 text-pink-600 dark:bg-pink-900 dark:text-pink-300',
-                        ];
+                <div
+                    class="flex flex-col h-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
 
-                        $randomBadge = $badgeColors[array_rand($badgeColors)];
-                    @endphp
+                    <img
+                        src="https://images.unsplash.com/photo-1498050108023-c5249f4df085"
+                        class="w-full h-48 object-cover">
 
-                    <div
-                        class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
+                    <div class="flex flex-col flex-1 p-6">
 
-                        <img
-                            src="https://images.unsplash.com/photo-1498050108023-c5249f4df085"
-                            class="w-full h-48 object-cover">
+                        {{-- Header --}}
+                        <div class="flex items-center justify-between">
 
-                        <div class="p-6">
+                            <h2 class="text-xl font-bold text-gray-800 dark:text-white">
+                                {{ $organization->name }}
+                            </h2>
 
-                            <div class="flex items-center justify-between">
-
-                                <h2 class="text-xl font-bold text-gray-800 dark:text-white">
-                                    {{ $organization->name }}
-                                </h2>
-
-                                <span class="{{ $randomBadge }} text-xs px-3 py-1 rounded-full">
-                                    {{ $randomCategory }}
-                                </span>
-
-                            </div>
-
-                            <p class="text-gray-500 dark:text-gray-400 text-sm mt-3 line-clamp-2">
-
-                                {{ $organization->description ?? 'Belum ada deskripsi organisasi.' }}
-
-                            </p>
-
-                            <div class="flex items-center justify-between mt-6">
-
-                                <span class="text-gray-500 dark:text-gray-400 text-sm">
-                                    👥 {{ $organization->userOrganizations->count() }} Member
-                                </span>
-
-                                <a href="{{ route('organizations.show', $organization) }}"
-                                    class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-xl transition">
-
-                                    Lihat
-
-                                </a>
-
-                            </div>
+                            <span class="{{ $randomBadge }} text-xs px-3 py-1 rounded-full">
+                                {{ $organization->category_organizations }}
+                            </span>
 
                         </div>
-                    </div>
 
-                @empty
+                        {{-- Description --}}
+                        <p class="text-gray-500 dark:text-gray-400 text-sm mt-3 line-clamp-2">
 
-                    <div
-                        class="col-span-full rounded-3xl border border-dashed border-gray-300 dark:border-gray-700 p-12 text-center">
+                            {{ $organization->description ?? 'Belum ada deskripsi organisasi.' }}
 
-                        <h3 class="text-xl font-semibold text-gray-700 dark:text-white">
-                            Kamu belum join organisasi
-                        </h3>
-
-                        <p class="mt-2 text-gray-500 dark:text-gray-400">
-                            Mulai buat organisasi pertamamu.
                         </p>
 
-                        <a href="{{ route('organizations.create') }}"
-                            class="inline-flex items-center mt-5 bg-brand-500 hover:bg-brand-600 text-white px-5 py-3 rounded-xl transition">
+                        {{-- Footer --}}
+                        <div class="mt-auto flex items-center justify-between pt-6">
 
-                            + Buat Organisasi
+                            <span class="text-gray-500 dark:text-gray-400 text-sm">
+                                👥 {{ $organization->userOrganizations->count() }} Member
+                            </span>
 
-                        </a>
+                            <a href="{{ route('organizations.show', $organization) }}"
+                                class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-xl transition">
+
+                                Lihat
+
+                            </a>
+
+                        </div>
 
                     </div>
 
-                @endforelse
+                </div>
 
-            </div>
+            @empty
+
+                <div
+                    class="col-span-full rounded-3xl border border-dashed border-gray-300 dark:border-gray-700 p-12 text-center">
+
+                    <h3 class="text-xl font-semibold text-gray-700 dark:text-white">
+                        Kamu belum join organisasi
+                    </h3>
+
+                    <p class="mt-2 text-gray-500 dark:text-gray-400">
+                        Mulai buat organisasi pertamamu.
+                    </p>
+
+                    <a href="{{ route('organizations.create') }}"
+                        class="inline-flex items-center mt-5 bg-brand-500 hover:bg-brand-600 text-white px-5 py-3 rounded-xl transition">
+
+                        + Buat Organisasi
+
+                    </a>
+
+                </div>
+
+            @endforelse
+
+        </div>
         
 
         </div>

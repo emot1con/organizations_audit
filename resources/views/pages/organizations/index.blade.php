@@ -13,17 +13,6 @@
 
             @php
 
-                $categories = [
-                    'Technology',
-                    'Business',
-                    'Education',
-                    'Creative',
-                    'Programming',
-                    'Community'
-                ];
-
-                $randomCategory = $categories[array_rand($categories)];
-
                 $badgeColors = [
                     'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300',
                     'bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-300',
@@ -37,13 +26,13 @@
             @endphp
 
             <div
-                class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
+                class="flex flex-col h-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
 
                 <img
                     src="https://images.unsplash.com/photo-1498050108023-c5249f4df085"
                     class="w-full h-48 object-cover">
 
-                <div class="p-6">
+                <div class="flex flex-col flex-1 p-6">
 
                     <div class="flex items-center justify-between">
 
@@ -52,7 +41,7 @@
                         </h2>
 
                         <span class="{{ $randomBadge }} text-xs px-3 py-1 rounded-full">
-                            {{ $randomCategory }}
+                            {{ $organization->category_organizations }}
                         </span>
 
                     </div>
@@ -66,11 +55,11 @@
                     @php
 
                         $isJoined = $organization->userOrganizations
-                            ->contains('user_id', auth()->id());
+                            ->contains('user_id', Auth::id());
 
                     @endphp
 
-                    <div class="flex items-center justify-between mt-6">
+                    <div class="mt-auto flex items-center justify-between pt-6">
 
                         <span class="text-gray-500 dark:text-gray-400 text-sm">
                             👥 {{ $organization->userOrganizations->count() }} Member

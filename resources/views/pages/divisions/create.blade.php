@@ -24,7 +24,7 @@
 
             {{-- FORM --}}
             <form
-                action="#"
+                action="{{ route('organizations.divisions.store', $organization) }}"
                 method="POST"
             >
 
@@ -36,7 +36,7 @@
                     label="Nama Organisasi"
                     type="text"
                     name="organization_name"
-                    value="Himpunan Mahasiswa Informatika"
+                    value="{{ $organization->name }}"
                     disabled="true"
                 />
 
@@ -47,8 +47,16 @@
                     type="text"
                     name="name"
                     placeholder="Masukkan nama divisi"
-                    value=""
+                    value="{{ old('name') }}"
                 />
+
+                @error('name')
+
+                    <p class="mb-5 text-sm text-red-500">
+                        {{ $message }}
+                    </p>
+
+                @enderror
 
                 {{-- Category --}}
                 <x-form.input.select
@@ -56,13 +64,21 @@
                     label="Kategori Divisi"
                     name="category"
                     placeholder="Pilih kategori divisi"
+                    :selected="old('category')"
                     :options="[
                         'tetap' => 'Divisi Tetap',
                         'sementara' => 'Divisi Sementara',
                     ]"
                 />
 
-             
+                @error('category')
+
+                    <p class="mb-5 text-sm text-red-500">
+                        {{ $message }}
+                    </p>
+
+                @enderror
+
                 {{-- Division Cash --}}
                 <x-form.input.input
                     class="mb-5"
@@ -77,7 +93,11 @@
                 <div
                     class="mb-6 rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-700 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
 
-                    Divisi baru akan otomatis terhubung dengan organisasi yang dipilih dan memiliki saldo awal Rp 0.
+                    Divisi baru akan otomatis terhubung dengan organisasi
+                    <span class="font-semibold">
+                        {{ $organization->name }}
+                    </span>
+                    dan memiliki saldo awal Rp 0.
 
                 </div>
 

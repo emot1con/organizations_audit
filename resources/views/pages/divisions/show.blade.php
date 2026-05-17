@@ -150,7 +150,6 @@
                     placeholder="Search member..."
                     class="h-11 rounded-xl border border-gray-300 bg-transparent px-4 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-white xl:w-[280px]">
 
-
             </div>
 
         </div>
@@ -192,103 +191,106 @@
 
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
 
-                        {{-- Member Row --}}
-                        <tr>
+                        @forelse($division->userOrganizations as $member)
 
-                            <td class="px-5 py-4">
+                            <tr>
 
-                                <div class="flex items-center gap-3">
+                                {{-- Member --}}
+                                <td class="px-5 py-4">
 
-                                    <div
-                                        class="h-10 w-10 rounded-full bg-brand-500 flex items-center justify-center text-white font-semibold">
+                                    <div class="flex items-center gap-3">
 
-                                        D
+                                        <div
+                                            class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-500 font-semibold text-white">
 
-                                    </div>
+                                            {{ strtoupper(substr($member->user->name, 0, 1)) }}
 
-                                    <div>
+                                        </div>
 
-                                        <h4 class="font-medium text-gray-800 dark:text-white">
-                                            Deru Pratama
-                                        </h4>
+                                        <div>
 
-                                        <p class="text-sm text-gray-500">
-                                            deru@example.com
-                                        </p>
+                                            <h4 class="font-medium text-gray-800 dark:text-white">
 
-                                    </div>
+                                                {{ $member->user->name }}
 
-                                </div>
+                                            </h4>
 
-                            </td>
+                                            <p class="text-sm text-gray-500">
 
-                            <td class="px-5 py-4">
+                                                {{ $member->user->email }}
 
-                                <span
-                                    class="bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300 text-xs px-3 py-1 rounded-full">
-
-                                    Ketua Divisi
-
-                                </span>
-
-                            </td>
-
-                            <td class="px-5 py-4 text-sm text-gray-500">
-                                12 Mei 2026
-                            </td>
-
-                            <td class="px-5 py-4">
-
-                                <span
-                                    class="bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300 text-xs px-3 py-1 rounded-full">
-
-                                    Active
-
-                                </span>
-
-                            </td>
-
-                            {{-- Dropdown --}}
-                            <td class="px-5 py-4 text-right">
-
-                                <div class="relative inline-block text-left">
-
-                                    <button
-                                        class="rounded-lg border border-gray-300 px-3 py-2 hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800">
-
-                                        ⋮
-
-                                    </button>
-
-                                    {{-- Dropdown Menu --}}
-                                    <div
-                                        class="absolute right-0 mt-2 w-48 rounded-2xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900">
-
-                                        <div class="p-2">
-
-                                            <a href="#"
-                                                class="flex w-full rounded-xl px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">
-
-                                                ⚙ Settings Permission
-
-                                            </a>
-
-                                            <a href="#"
-                                                class="flex w-full rounded-xl px-3 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10">
-
-                                                🗑 Delete Member
-
-                                            </a>
+                                            </p>
 
                                         </div>
 
                                     </div>
 
-                                </div>
+                                </td>
 
-                            </td>
+                                {{-- Role --}}
+                                <td class="px-5 py-4">
 
-                        </tr>
+                                    <span
+                                        class="rounded-full bg-blue-100 px-3 py-1 text-xs text-blue-600 dark:bg-blue-900 dark:text-blue-300">
+
+                                        {{ $member->role->name }}
+
+                                    </span>
+
+                                </td>
+
+                                {{-- Joined --}}
+                                <td class="px-5 py-4 text-sm text-gray-500">
+
+                                    {{ $member->created_at->translatedFormat('d F Y') }}
+
+                                </td>
+
+                                {{-- Status --}}
+                                <td class="px-5 py-4">
+
+                                    <span
+                                        class="rounded-full bg-green-100 px-3 py-1 text-xs text-green-600 dark:bg-green-900 dark:text-green-300">
+
+                                        Active
+
+                                    </span>
+
+                                </td>
+
+                                {{-- Action --}}
+                                <td class="px-5 py-4 text-right">
+
+                                    <button
+                                        class="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-500 transition hover:bg-red-100 dark:border-red-900 dark:bg-red-900/20 dark:hover:bg-red-900/40">
+
+                                        Hapus
+
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
+                        @empty
+
+                            <tr>
+
+                                <td colspan="5" class="px-5 py-10 text-center">
+
+                                    <h3 class="text-lg font-semibold text-gray-700 dark:text-white">
+                                        Belum ada anggota
+                                    </h3>
+
+                                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                        Divisi ini belum memiliki anggota.
+                                    </p>
+
+                                </td>
+
+                            </tr>
+
+                        @endforelse
 
                     </tbody>
 

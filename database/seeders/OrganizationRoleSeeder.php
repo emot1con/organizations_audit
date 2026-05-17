@@ -21,6 +21,7 @@ class OrganizationRoleSeeder extends Seeder
             'Ketua Umum',
             'Bendahara',
             'Sekretaris',
+            'Anggota',
         ];
 
         /**

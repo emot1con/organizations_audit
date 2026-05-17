@@ -12,10 +12,10 @@
 
 
             {{-- FORM --}}
-            {{-- <form
-                action="{{ route('organizations.join.store', $organization) }}"
+            <form
+                action="{{ route('organization.memberJoin.store', $organization) }}"
                 method="POST"
-            > --}}
+            >
 
                 @csrf
 
@@ -33,10 +33,17 @@
                 <x-form.input.input
                     class="mb-5"
                     label="Kode Organisasi"
-                    type="password"
-                    name="password_organization"
+                    type="text"
+                    name="password_organizations"
                     placeholder="Masukkan kode organisasi"
                 />
+                @error('password_organizations')
+
+                    <p class="text-sm text-red-500 mb-5">
+                        {{ $message }}
+                    </p>
+
+                @enderror
 
                 {{-- Informasi --}}
                 <div

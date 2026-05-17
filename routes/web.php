@@ -7,6 +7,7 @@ use App\Http\Controllers\DivisionSettingsController;
 use App\Http\Controllers\OrganizationMemberController;
 use App\Http\Controllers\OrganizationPageController;
 use App\Http\Controllers\OrganizationSettingsController;
+use App\Http\Controllers\OrganizationUserController;
 use App\Http\Controllers\TransactionDivisionController;
 use App\Http\Controllers\TransactionOrganizationController;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,9 @@ Route::post('/logout', [AuthController::class, 'logout'])
 
 // Organizations
 Route::resource('organizations', OrganizationPageController::class)->middleware('auth');
+
+// Organisasi buat Divisi
+Route::resource('organizations.divisions',DivisionController::class);
 
 // Divisi
 Route::resource('divisions', DivisionController::class);
@@ -52,7 +56,9 @@ Route::get(
     [DivisionSettingsController::class, 'index']
 )->name('divisions.settings');
 
-
+// Member 
+// Member Organisasi
+Route::resource('organization.users', OrganizationUserController::class);
 
 
 

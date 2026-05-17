@@ -120,7 +120,8 @@ class OrganizationPageController extends Controller
          */
         $organization->load([
             'owner',
-            'divisions',
+            'divisions.userOrganizations',
+            'divisions.roles',
             'userOrganizations.user',
         ]);
 

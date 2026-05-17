@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Division;
 use App\Models\Organization;
+use App\Models\OrganizationRole;
 use App\Models\UserOrganization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,45 +28,90 @@ class DivisionController extends Controller
      */
     public function create(Organization $organization)
     {
-        // $this->authorizeOrganizationAccess($organization);
+        $this->authorizeOrganizationAccess($organization);
 
-        return view('pages.divisions.create');    }
+        return view('pages.divisions.create', [
+            'organization' => $organization,
+        ]);
+    }
 
     /**
      * Store division
      */
-    public function store(Request $request, Organization $organization)
+    public function store(
+    Request $request,
+    Organization $organization
+    )
     {
+        /**
+         * Validation
+         */
         $request->validate([
+
             'name' => 'required|string|max:255',
-            'category' => 'nullable|string|max:255',
+
+            'category' => 'required|in:tetap,sementara',
+
         ]);
 
-        $isAdmin = UserOrganization::where('user_id', Auth::id())
-            ->where('organization_id', $organization->id)
-            ->whereHas('role', function ($q) {
-                $q->where('name', 'admin')
-                  ->where('scope', 'organization');
-            })
-            ->whereNull('division_id')
-            ->exists();
+        /**
+         * Create Division
+         */
+        $division = Division::create([
 
-        $isOwner = $organization->owner_id === Auth::id();
-
-        if (!$isAdmin && !$isOwner) {
-            abort(403);
-        }
-
-        Division::create([
             'organization_id' => $organization->id,
+
             'name' => $request->name,
+
             'category' => $request->category,
+
             'division_cash' => 0,
+
         ]);
 
+        /**
+         * Default Role Division
+         * Ketua Divisi
+         */
+        $role = OrganizationRole::firstOrCreate([
+
+            'organization_id' => $organization->id,
+
+            'division_id' => $division->id,
+
+            'name' => 'Ketua Divisi',
+
+            'scope' => 'division',
+
+        ]);
+
+        /**
+         * Auto Join Creator
+         */
+        UserOrganization::create([
+
+            'user_id' => Auth::id(),
+
+            'organization_id' => $organization->id,
+
+            'role_id' => $role->id,
+
+            'division_id' => $division->id,
+
+        ]);
+
+        /**
+         * Redirect
+         */
         return redirect()
-            ->route('organizations.show', $organization)
-            ->with('success', 'Divisi berhasil dibuat');
+            ->route(
+                'organizations.show',
+                $organization
+            )
+            ->with(
+                'success',
+                'Divisi berhasil dibuat'
+            );
     }
 
     /**
@@ -78,7 +124,7 @@ class DivisionController extends Controller
         $division->load([
             'organization',
             'userOrganizations.user',
-            'transactions',
+            'userOrganizations.role',
         ]);
         
 

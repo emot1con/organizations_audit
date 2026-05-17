@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Organization;
+use App\Models\OrganizationRole;
+use App\Models\UserOrganization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class OrganizationMemberController extends Controller
     {
@@ -35,31 +38,73 @@ class OrganizationMemberController extends Controller
             'password_organizations' => 'required|string',
         ]);
 
-        if (!\Illuminate\Support\Facades\Hash::check($request->password_organizations, $organization->password_organizations)) {
-            return back()->withErrors(['password_organizations' => 'Kode organisasi salah.']);
+        /**
+         * Check Password
+         */
+        if (
+            !Hash::check(
+                $request->password_organizations,
+                $organization->password_organizations
+            )
+        ) {
+            return back()->withErrors([
+                'password_organizations' => 'Kode organisasi salah.'
+            ]);
         }
 
-        $exists = \App\Models\UserOrganization::where('user_id', Auth::id())
-            ->where('organization_id', $organization->id)
+        /**
+         * Already Joined
+         */
+        $exists = UserOrganization::where(
+            'user_id',
+            Auth::id()
+        )
+            ->where(
+                'organization_id',
+                $organization->id
+            )
             ->exists();
 
         if ($exists) {
-            return back()->with('error', 'Anda sudah bergabung dalam organisasi ini.');
+
+            return back()->with(
+                'error',
+                'Anda sudah bergabung dalam organisasi ini.'
+            );
         }
 
-        $role = \App\Models\OrganizationRole::firstOrCreate([
-            'name' => 'anggota',
-            'scope' => 'organization',
-        ]);
+        /**
+         * Default Role
+         */
+        $role = OrganizationRole::where(
+            'organization_id',
+            $organization->id
+        )
+            ->where('scope', 'organization')
+            ->where('name', 'Anggota')
+            ->first();
 
-        \App\Models\UserOrganization::create([
+        /**
+         * Join Organization
+         */
+        UserOrganization::create([
+
             'user_id' => Auth::id(),
+
             'organization_id' => $organization->id,
-            'role_id' => $role->id,
+
+            'role_id' => $role?->id,
+
             'division_id' => null,
+
         ]);
 
-        return redirect()->route('organizations.index')->with('success', 'Berhasil bergabung dengan organisasi.');
+        return redirect()
+            ->route('organizations.index')
+            ->with(
+                'success',
+                'Berhasil bergabung dengan organisasi.'
+            );
     }
 
     /**
