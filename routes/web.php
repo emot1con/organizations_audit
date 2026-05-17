@@ -3,8 +3,10 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DivisionController;
+use App\Http\Controllers\DivisionSettingsController;
 use App\Http\Controllers\OrganizationMemberController;
 use App\Http\Controllers\OrganizationPageController;
+use App\Http\Controllers\OrganizationSettingsController;
 use App\Http\Controllers\TransactionDivisionController;
 use App\Http\Controllers\TransactionOrganizationController;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +43,18 @@ Route::resource('divisions.transactions', TransactionDivisionController::class);
 // Join Organization
 Route::resource('organization.memberJoin', OrganizationMemberController::class);
 
+// Settings
+// Setting Organizations
+Route::get(
+    '/organizations/{organization}/settings',
+    [OrganizationSettingsController::class, 'index']
+)->name('organizations.settings');
+
+// Settings divisions
+Route::get(
+    '/divisions/{division}/settings',
+    [DivisionSettingsController::class, 'index']
+)->name('divisions.settings');
 
 
 
