@@ -10,7 +10,10 @@
 
         <x-common.component-card title="Edit Data Organisasi">
 
-            <form action="{{ route('organizations.update', $organization) }}" method="POST">
+            <form
+                action="{{ route('organizations.update', $organization) }}"
+                method="POST"
+            >
 
                 @csrf
                 @method('PUT')
@@ -22,8 +25,16 @@
                     type="text"
                     name="name"
                     placeholder="Masukkan nama organisasi"
-                    value="Himpunan Mahasiswa Informatika"
+                    value="{{ old('name', $organization->name) }}"
                 />
+
+                @error('name')
+
+                    <p class="mb-5 text-sm text-red-500">
+                        {{ $message }}
+                    </p>
+
+                @enderror
 
                 {{-- Uang Organisasi --}}
                 <x-form.input.input
@@ -32,32 +43,54 @@
                     type="number"
                     name="organizations_cash"
                     placeholder="Masukkan Total Keuangan Organisasi"
-                    value="2500000"
+                    disabled=true
+                    value="{{ old('organizations_cash', $organization->organizations_cash) }}"
                 />
+
+               
 
                 {{-- Kategori --}}
                 <x-form.input.select
                     class="mb-5"
                     label="Kategori Organisasi"
-                    name="category"
+                    name="category_organizations"
                     placeholder="Pilih kategori organisasi"
-                    selected="1"
+                    :selected="old(
+                        'category_organizations',
+                        $organization->category_organizations
+                    )"
                     :options="[
-                        '1' => 'Himpunan',
-                        '2' => 'BEM',
-                        '3' => 'UKM',
+                        'Himpunan' => 'Himpunan',
+                        'BEM' => 'BEM',
+                        'UKM' => 'UKM',
                     ]"
                 />
+
+                @error('category_organizations')
+
+                    <p class="mb-5 text-sm text-red-500">
+                        {{ $message }}
+                    </p>
+
+                @enderror
 
                 {{-- Kode Join --}}
                 <x-form.input.input
                     class="mb-5"
                     label="Kode Join Organisasi"
                     type="text"
-                    name="password_organization"
-                    placeholder="Masukkan Kode Untuk verifikasi User Join"
-                    value="HMIF2026"
+                    name="password_organizations"
+                    placeholder="Masukkan Kode Untuk verifikasi User Join (Isi hanya jika ingin diubah)"
+                    value="" 
                 />
+
+                @error('password_organizations')
+
+                    <p class="mb-5 text-sm text-red-500">
+                        {{ $message }}
+                    </p>
+
+                @enderror
 
                 {{-- Email --}}
                 <x-form.input.input
@@ -66,8 +99,16 @@
                     type="email"
                     name="contact"
                     placeholder="Masukkan Email Organisasi"
-                    value="hmif@gmail.com"
+                    value="{{ old('contact', $organization->contact) }}"
                 />
+
+                @error('contact')
+
+                    <p class="mb-5 text-sm text-red-500">
+                        {{ $message }}
+                    </p>
+
+                @enderror
 
                 {{-- Deskripsi --}}
                 <x-form.input.text-area
@@ -76,8 +117,15 @@
                     name="description"
                     placeholder="Masukkan Deskripsi Organisasi"
                     rows="4"
-                >Himpunan Mahasiswa Informatika merupakan organisasi mahasiswa yang bergerak di bidang akademik dan pengembangan teknologi.
-                </x-form.input.text-area>
+                >{{ old('description', $organization->description) }}</x-form.input.text-area>
+
+                @error('description')
+
+                    <p class="mb-5 text-sm text-red-500">
+                        {{ $message }}
+                    </p>
+
+                @enderror
 
                 {{-- Information --}}
                 <div
@@ -90,7 +138,7 @@
                 {{-- Button --}}
                 <div class="flex items-center justify-end gap-3">
 
-                    <a href="#"
+                    <a href="{{ route('organizations.settings', $organization) }}"
                         class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.05] transition">
 
                         Batal

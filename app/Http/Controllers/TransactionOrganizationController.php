@@ -11,18 +11,33 @@ class TransactionOrganizationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Organization $organization)
+   public function index(Organization $organization)
     {
-        $organization->load([
-            'transactions',
-        ]);
+        $transactions = $organization->transactions()
+            ->with([
 
-        return view('pages.transactions.index', [
-            'organization' => $organization,
-            'transactions' => $organization->transactions,
-            'type' => 'organization',
-        ]);
+                'createdBy',
 
+                'approvedBy',
+
+                'division',
+
+            ])
+            ->latest('transaction_date')
+            ->get();
+
+        return view(
+            'pages.transactions.index',
+            [
+
+                'organization' => $organization,
+
+                'transactions' => $transactions,
+
+                'type' => 'organization',
+
+            ]
+        );
     }
 
     /**
@@ -47,13 +62,32 @@ class TransactionOrganizationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($organization, $transaction)
+    public function show(
+    Organization $organization,
+    Transaction $transaction
+    )
     {
-        return view('pages.transactions.show', [
-            'type' => 'organization',
-        ]);
-    }
+        $transaction->load([
 
+            'division',
+            'createdBy',
+            'approvedBy',
+
+        ]);
+
+        return view(
+            'pages.transactions.show',
+            [
+
+                'organization' => $organization,
+
+                'transaction' => $transaction,
+
+                'type' => 'organization',
+
+            ]
+        );
+    }
     /**
      * Show the form for editing the specified resource.
      */

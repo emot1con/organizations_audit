@@ -99,8 +99,9 @@
                     name="category_id"
                     placeholder="Pilih kategori transaksi"
                     :options="[
-                        '1' => 'Pemasukan',
+                        '1' => 'Pemasukan dari Organisasi',
                         '2' => 'Pengeluaran',
+                        '3' => 'Pemasukan dari Lainnya',
                     ]"
                 />
 

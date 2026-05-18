@@ -41,10 +41,9 @@
             <!-- GRID -->
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7">
 
-            @forelse($organizations as $item)
+            @forelse($organizations as $organization)
 
                 @php
-                    $organization = $item->organization;
 
                     $badgeColors = [
                         'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300',

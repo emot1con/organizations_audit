@@ -27,7 +27,7 @@
                     </div>
 
                     <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
-                        Himpunan Mahasiswa Informatika
+                        {{ $organization->name }}
                     </h1>
 
                     <p class="mt-3 text-gray-500 dark:text-gray-400">
@@ -62,12 +62,29 @@
             {{-- Status --}}
             <div>
 
-                <span
-                    class="rounded-full bg-yellow-100 px-4 py-2 text-sm font-medium text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300">
+                @php
 
-                    Pending
+                $statusColor = match($transaction->status) {
 
-                </span>
+                    'approved' =>
+                        'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300',
+
+                    'rejected' =>
+                        'bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300',
+
+                    default =>
+                        'bg-yellow-100 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300',
+
+                };
+
+            @endphp
+
+            <span
+                class="rounded-full px-4 py-2 text-sm font-medium {{ $statusColor }}">
+
+                {{ ucfirst($transaction->status) }}
+
+            </span>
 
             </div>
 
@@ -100,7 +117,7 @@
                         </p>
 
                         <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
-                            #TRX-001
+                            #TRX-{{ str_pad($transaction->id, 3, '0', STR_PAD_LEFT) }}
                         </h3>
 
                     </div>
@@ -115,7 +132,7 @@
                         <span
                             class="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-600 dark:bg-red-900 dark:text-red-300">
 
-                            Pengeluaran
+                            {{ ucfirst($transaction->category) }}
 
                         </span>
 
@@ -129,7 +146,7 @@
                         </p>
 
                         <h3 class="text-2xl font-bold text-gray-800 dark:text-white">
-                            Rp 500.000
+                            Rp {{ number_format($transaction->amount, 0, ',', '.') }}
                         </h3>
 
                     </div>
@@ -142,7 +159,15 @@
                         </p>
 
                         <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
-                            Divisi Media Kreatif
+                            @if($transaction->division_id)
+
+                                {{ $transaction->division?->name }}
+
+                            @else
+
+                                -
+
+                            @endif
                         </h3>
 
                     </div>
@@ -155,7 +180,7 @@
                         </p>
 
                         <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
-                            15 Mei 2026
+                            {{ $transaction->transaction_date?->translatedFormat('d F Y') }}
                         </h3>
 
                     </div>
@@ -170,7 +195,7 @@
                         <div
                             class="rounded-xl border border-gray-200 bg-gray-50 p-4 text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
 
-                            Pengeluaran untuk kebutuhan media publikasi acara seminar nasional.
+                            {{ $transaction->description }}
 
                         </div>
 
@@ -204,7 +229,7 @@
                         </p>
 
                         <h3 class="font-semibold text-gray-800 dark:text-white">
-                            Deru Pratama
+                            {{ $transaction->createdBy?->name }}
                         </h3>
 
                     </div>
@@ -216,7 +241,7 @@
                         </p>
 
                         <h3 class="font-semibold text-gray-800 dark:text-white">
-                            Belum disetujui
+                            {{ $transaction->approvedBy?->name ?? 'Belum disetujui' }}
                         </h3>
 
                     </div>
@@ -235,10 +260,9 @@
 
                 </h2>
 
-                <img
-                    src="https://images.unsplash.com/photo-1554224155-6726b3ff858f"
-                    class="rounded-2xl object-cover"
-                >
+                <span>
+                    {{ $transaction->proof_url }}
+                </span>
 
             </div>
 

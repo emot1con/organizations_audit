@@ -18,9 +18,18 @@ class DivisionController extends Controller
     {
         $this->authorizeOrganizationAccess($organization);
 
-        $organization->load('divisions');
+        $organization->load([
 
-        return view('divisions.index', compact('organization'));
+            'divisions.userOrganizations',
+
+            'divisions.roles',
+
+        ]);
+
+        return view(
+            'pages.divisions.index',
+            compact('organization')
+        );
     }
 
     /**
@@ -134,11 +143,26 @@ class DivisionController extends Controller
     /**
      * Form edit division
      */
-    public function edit(Division $division)
+    public function edit(
+    Organization $organization,
+    Division $division
+    )
     {
-        $this->authorizeDivisionAccess($division);
+        $this->authorizeOrganizationAccess($organization);
 
-        return view('divisions.edit', compact('division'));
+        if ($division->organization_id !== $organization->id) {
+
+            abort(404);
+
+        }
+
+        return view(
+            'pages.divisions.edit',
+            [
+                'organization' => $organization,
+                'division' => $division,
+            ]
+        );
     }
 
     /**

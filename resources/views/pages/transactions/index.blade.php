@@ -15,10 +15,8 @@
 
                 @if ($type === 'organization')
 
-                    
-
                     <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
-                        Himpunan Mahasiswa Informatika
+                        {{ $organization->name }}
                     </h1>
 
                     <p class="mt-3 text-gray-500 dark:text-gray-400">
@@ -27,10 +25,8 @@
 
                 @else
 
-                   
-
                     <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
-                        Divisi Media Kreatif
+                        {{ $division->name }}
                     </h1>
 
                     <p class="mt-3 text-gray-500 dark:text-gray-400">
@@ -46,7 +42,7 @@
 
                 @if ($type === 'organization')
 
-                    <a href="#"
+                    <a href="{{ route('organizations.transactions.create', $organization) }}"
                         class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600 transition">
 
                         Tambah Transaksi
@@ -55,7 +51,7 @@
 
                 @else
 
-                    <a href="#"
+                    <a href="{{ route('divisions.transactions.create', $division) }}"
                         class="inline-flex items-center justify-center rounded-xl bg-orange-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-orange-600 transition">
 
                         Tambah Transaksi
@@ -86,7 +82,7 @@
                         </th>
 
                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400">
-                            Tipe
+                            Category
                         </th>
 
                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400">
@@ -99,6 +95,10 @@
 
                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400">
                             Status
+                        </th>
+
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400">
+                            Dibuat Oleh
                         </th>
 
                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400">
@@ -115,206 +115,179 @@
 
                 <tbody>
 
-                    {{-- Row 1 --}}
-                    <tr class="border-b border-gray-100 dark:border-gray-800">
+                    @forelse($transactions as $transaction)
 
-                        <td class="px-6 py-5 text-sm text-gray-700 dark:text-gray-300">
-                            #TRX-001
-                        </td>
+                        <tr class="border-b border-gray-100 dark:border-gray-800">
 
-                        <td class="px-6 py-5">
+                            {{-- ID --}}
+                            <td class="px-6 py-5 text-sm text-gray-700 dark:text-gray-300">
 
-                            <span
-                                class="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-600 dark:bg-red-900 dark:text-red-300">
+                                #TRX-{{ str_pad($transaction->id, 3, '0', STR_PAD_LEFT) }}
 
-                                Pengeluaran
+                            </td>
 
-                            </span>
+                            {{-- Category --}}
+                            <td class="px-6 py-5">
 
-                        </td>
+                                @php
 
-                        <td class="px-6 py-5 text-sm font-semibold text-gray-800 dark:text-white">
-                            Rp 500.000
-                        </td>
+                                    $categoryColor = match($transaction->category) {
 
-                        <td class="px-6 py-5 text-sm text-gray-700 dark:text-gray-300">
-                            Divisi Media Kreatif
-                        </td>
+                                        'pengeluaran' =>
+                                            'bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300',
 
-                        <td class="px-6 py-5">
+                                        default =>
+                                            'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300',
 
-                            <span
-                                class="rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300">
+                                    };
 
-                                Pending
+                                @endphp
 
-                            </span>
+                                <span
+                                    class="rounded-full px-3 py-1 text-xs font-medium {{ $categoryColor }}">
 
-                        </td>
+                                    {{ ucfirst($transaction->category) }}
 
-                        <td class="px-6 py-5 text-sm text-gray-500 dark:text-gray-400">
-                            15 Mei 2026
-                        </td>
+                                </span>
 
-                        
-                            
-                        
-                        <td class="px-6 py-5">
+                            </td>
 
-                            <div class="flex justify-end gap-2">
+                            {{-- Amount --}}
+                            <td class="px-6 py-5 text-sm font-semibold text-gray-800 dark:text-white">
 
-                            @if ($type !== 'division')
-                                <button
-                                    class="rounded-lg bg-green-500 px-3 py-2 text-xs font-medium text-white hover:bg-green-600">
+                                Rp {{ number_format($transaction->amount, 0, ',', '.') }}
 
-                                    Approve
+                            </td>
 
-                                </button>
+                            {{-- Division --}}
+                            <td class="px-6 py-5 text-sm text-gray-700 dark:text-gray-300">
 
-                                <button
-                                    class="rounded-lg bg-red-500 px-3 py-2 text-xs font-medium text-white hover:bg-red-600">
+                                @if($transaction->division_id)
 
-                                    Tolak
+                                    {{ $transaction->division?->name }}
 
-                                </button>
-                           
-                                <a href="{{ route('divisions.transactions.show', [4, 1]) }}" 
-                                    class="rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
+                                @else
 
-                                    Detail
+                                    -
 
-                                </a>
+                                @endif
 
-                             @endif
+                            </td>
 
-                                <a href="{{ route('organizations.transactions.show', [4, 1]) }}" 
-                                    class="rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
+                            {{-- Status --}}
+                            <td class="px-6 py-5">
 
-                                    Detail
+                                @php
 
-                                </a>
+                                    $statusColor = match($transaction->status) {
 
-                            </div>
+                                        'approved' =>
+                                            'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300',
 
-                        </td>
+                                        'rejected' =>
+                                            'bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300',
 
-                    </tr>
+                                        default =>
+                                            'bg-yellow-100 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300',
 
-                    {{-- Row 2 --}}
-                    <tr class="border-b border-gray-100 dark:border-gray-800">
+                                    };
 
-                        <td class="px-6 py-5 text-sm text-gray-700 dark:text-gray-300">
-                            #TRX-002
-                        </td>
+                                @endphp
 
-                        <td class="px-6 py-5">
+                                <span
+                                    class="rounded-full px-3 py-1 text-xs font-medium {{ $statusColor }}">
 
-                            <span
-                                class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-600 dark:bg-green-900 dark:text-green-300">
+                                    {{ ucfirst($transaction->status) }}
 
-                                Pendapatan
+                                </span>
 
-                            </span>
+                            </td>
 
-                        </td>
+                            {{-- Created By --}}
+                            <td class="px-6 py-5 text-sm text-gray-700 dark:text-gray-300">
 
-                        <td class="px-6 py-5 text-sm font-semibold text-gray-800 dark:text-white">
-                            Rp 1.200.000
-                        </td>
+                                {{ $transaction->createdBy?->name ?? '-' }}
 
-                        <td class="px-6 py-5 text-sm text-gray-700 dark:text-gray-300">
-                            Organisasi
-                        </td>
+                            </td>
 
-                        <td class="px-6 py-5">
+                            {{-- Date --}}
+                            <td class="px-6 py-5 text-sm text-gray-500 dark:text-gray-400">
 
-                            <span
-                                class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-600 dark:bg-green-900 dark:text-green-300">
+                                {{ $transaction->transaction_date?->translatedFormat('d F Y') }}
 
-                                Approved
+                            </td>
 
-                            </span>
+                            {{-- Action --}}
+                            <td class="px-6 py-5">
 
-                        </td>
+                                <div class="flex justify-end gap-2">
 
-                        <td class="px-6 py-5 text-sm text-gray-500 dark:text-gray-400">
-                            17 Mei 2026
-                        </td>
+                                    @if(
+                                        $type === 'organization' &&
+                                        $transaction->status === 'pending'
+                                    )
 
-                        <td class="px-6 py-5">
+                                        <button
+                                            class="rounded-lg bg-green-500 px-3 py-2 text-xs font-medium text-white hover:bg-green-600">
 
-                            <div class="flex justify-end">
+                                            Approve
 
-                                <a href="#"
-                                    class="rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
+                                        </button>
 
-                                    Detail
+                                        <button
+                                            class="rounded-lg bg-red-500 px-3 py-2 text-xs font-medium text-white hover:bg-red-600">
 
-                                </a>
+                                            Tolak
 
-                            </div>
+                                        </button>
 
-                        </td>
+                                    @endif
 
-                    </tr>
+                                    @if ($type === 'organization')
 
-                    {{-- Row 3 --}}
-                    <tr>
+                                        <a href="{{ route('organizations.transactions.show', [$organization, $transaction]) }}"
+                                            class="rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
 
-                        <td class="px-6 py-5 text-sm text-gray-700 dark:text-gray-300">
-                            #TRX-003
-                        </td>
+                                            Detail
 
-                        <td class="px-6 py-5">
+                                        </a>
 
-                            <span
-                                class="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-600 dark:bg-red-900 dark:text-red-300">
+                                    @else
 
-                                Pengeluaran
+                                        <a href="{{ route('divisions.transactions.show', [$division, $transaction]) }}"
+                                            class="rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
 
-                            </span>
+                                            Detail
 
-                        </td>
+                                        </a>
 
-                        <td class="px-6 py-5 text-sm font-semibold text-gray-800 dark:text-white">
-                            Rp 300.000
-                        </td>
+                                    @endif
 
-                        <td class="px-6 py-5 text-sm text-gray-700 dark:text-gray-300">
-                            Divisi Acara
-                        </td>
+                                </div>
 
-                        <td class="px-6 py-5">
+                            </td>
 
-                            <span
-                                class="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-600 dark:bg-red-900 dark:text-red-300">
+                        </tr>
 
-                                Rejected
+                    @empty
 
-                            </span>
+                        <tr>
 
-                        </td>
+                            <td colspan="8" class="px-6 py-10 text-center">
 
-                        <td class="px-6 py-5 text-sm text-gray-500 dark:text-gray-400">
-                            19 Mei 2026
-                        </td>
+                                <h3 class="text-lg font-semibold text-gray-700 dark:text-white">
+                                    Belum ada transaksi
+                                </h3>
 
-                        <td class="px-6 py-5">
+                                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                    Transaksi belum tersedia.
+                                </p>
 
-                            <div class="flex justify-end">
+                            </td>
 
-                                <a href="#"
-                                    class="rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
+                        </tr>
 
-                                    Detail
-
-                                </a>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
+                    @endforelse
 
                 </tbody>
 

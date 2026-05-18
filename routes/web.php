@@ -3,9 +3,12 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DivisionController;
+use App\Http\Controllers\DivisionRoleController;
 use App\Http\Controllers\DivisionSettingsController;
+use App\Http\Controllers\DivisionUserController;
 use App\Http\Controllers\OrganizationMemberController;
 use App\Http\Controllers\OrganizationPageController;
+use App\Http\Controllers\OrganizationRoleController;
 use App\Http\Controllers\OrganizationSettingsController;
 use App\Http\Controllers\OrganizationUserController;
 use App\Http\Controllers\TransactionDivisionController;
@@ -45,10 +48,15 @@ Route::resource('organization.memberJoin', OrganizationMemberController::class)-
 
 // Settings
 // Setting Organizations
+
 Route::get(
     '/organizations/{organization}/settings',
     [OrganizationSettingsController::class, 'index']
-)->name('organizations.settings');
+)->name('organizations.settings.index');
+
+
+// atur dicisi
+Route::resource('organization.divisions', DivisionController::class);
 
 // Settings divisions
 Route::get(
@@ -60,6 +68,16 @@ Route::get(
 // Member Organisasi
 Route::resource('organization.users', OrganizationUserController::class);
 
+// Member Divisions
+Route::resource('division.users', DivisionUserController::class);
+
+
+// Roles
+// Role Organisasi
+Route::resource('organization.roles', OrganizationRoleController::class);
+
+// Role Divisi
+Route::resource('division.roles', DivisionRoleController::class);
 
 
 // calender pages

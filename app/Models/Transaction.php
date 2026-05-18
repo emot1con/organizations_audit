@@ -44,8 +44,19 @@ class Transaction extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function approver()
+    public function createdBy()
     {
-        return $this->belongsTo(User::class, 'approved_by');
+        return $this->belongsTo(
+            User::class,
+            'created_by'
+        );
+    }
+
+    public function approvedBy()
+    {
+        return $this->belongsTo(
+            User::class,
+            'approved_by'
+        );
     }
 }
