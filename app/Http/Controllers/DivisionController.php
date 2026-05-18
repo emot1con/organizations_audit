@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Division;
 use App\Models\Organization;
 use App\Models\OrganizationRole;
+use App\Models\Permission;
 use App\Models\UserOrganization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -95,6 +96,35 @@ class DivisionController extends Controller
         ]);
 
         /**
+         * Default Role Division
+         * Anggota
+         */
+        $memberRole = OrganizationRole::firstOrCreate([
+
+            'organization_id' => $organization->id,
+
+            'division_id' => $division->id,
+
+            'name' => 'Anggota',
+
+            'scope' => 'division',
+
+        ]);
+
+        /**
+         * Full permissions
+         * untuk ketua divisi
+         */
+        $divisionPermissions = Permission::where(
+            'scope',
+            'division'
+        )->pluck('id');
+
+        $role->permissions()->sync(
+            $divisionPermissions
+        );
+
+        /**
          * Auto Join Creator
          */
         UserOrganization::create([
@@ -131,36 +161,59 @@ class DivisionController extends Controller
         // $this->authorizeDivisionAccess($division);
 
         $division->load([
+
             'organization',
+
             'userOrganizations.user',
+
             'userOrganizations.role',
+
         ]);
-        
 
-        return view('pages.divisions.show', compact('division'));
+        /**
+         * Cek user sudah join
+         */
+        $isJoined = $division->userOrganizations()
+            ->where(
+                'user_id',
+                Auth::id()
+            )
+            ->exists();
+
+        return view(
+            'pages.divisions.show',
+            [
+
+                'division' => $division,
+
+                'isJoined' => $isJoined,
+
+            ]
+        );
     }
-
     /**
      * Form edit division
      */
     public function edit(
-    Organization $organization,
     Division $division
     )
     {
-        $this->authorizeOrganizationAccess($organization);
+        $organization = $division->organization;
 
-        if ($division->organization_id !== $organization->id) {
-
-            abort(404);
-
-        }
+        $this->authorizeOrganizationAccess(
+            $organization
+        );
 
         return view(
             'pages.divisions.edit',
             [
-                'organization' => $organization,
-                'division' => $division,
+
+                'organization' =>
+                    $organization,
+
+                'division' =>
+                    $division,
+
             ]
         );
     }
@@ -170,21 +223,50 @@ class DivisionController extends Controller
      */
     public function update(Request $request, Division $division)
     {
-        $this->authorizeDivisionAccess($division);
+        $organization = $division->organization;
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'category' => 'nullable|string|max:255',
+        $this->authorizeOrganizationAccess(
+            $organization
+        );
+
+        /**
+         * Validation
+         */
+        $validated = $request->validate([
+
+            'name' =>
+                'required|string|max:255',
+
+            'category' =>
+                'required|string|max:255',
+
         ]);
 
+        /**
+         * Update Division
+         */
         $division->update([
-            'name' => $request->name,
-            'category' => $request->category,
+
+            'name' =>
+                $validated['name'],
+
+            'category' =>
+                 $validated['category'],
+
         ]);
 
+        /**
+         * Redirect
+         */
         return redirect()
-            ->route('divisions.show', $division)
-            ->with('success', 'Divisi berhasil diupdate');
+            ->route(
+                'divisions.show',
+                $division
+            )
+            ->with(
+                'success',
+                'Divisi berhasil diupdate.'
+            );
     }
 
     /**
@@ -233,5 +315,92 @@ class DivisionController extends Controller
         if (!$isMember && !$isOwner) {
             abort(403);
         }
+    }
+
+    public function join(
+    Division $division
+    )
+    {
+        /**
+         * Cari member organization
+         */
+        $member = UserOrganization::where(
+
+            'organization_id',
+            $division->organization_id
+
+        )
+            ->where(
+                'user_id',
+                Auth::id()
+            )
+            ->first();
+
+        /**
+         * Belum join organization
+         */
+        if (!$member) {
+
+            return back()->withErrors([
+
+                'error' =>
+                    'Kamu belum tergabung di organisasi.'
+
+            ]);
+
+        }
+
+        /**
+         * Sudah join division
+         */
+        if ($member->division_id) {
+
+            return back()->withErrors([
+
+                'error' =>
+                    'Kamu sudah tergabung di divisi.'
+
+            ]);
+
+        }
+
+        /**
+         * Ambil role anggota divisi
+         */
+        $role = $division->roles()
+            ->where(
+                'name',
+                'Anggota'
+            )
+            ->first();
+
+        if (!$role) {
+
+            return back()->withErrors([
+
+                'error' =>
+                    'Role anggota divisi tidak ditemukan.'
+
+            ]);
+
+        }
+
+        /**
+         * Update division member
+         */
+        $member->update([
+
+            'division_id' =>
+                $division->id,
+
+            'role_id' =>
+                $role->id,
+
+        ]);
+
+        return back()->with(
+            'success',
+            'Berhasil join divisi.'
+        );
     }
 }

@@ -7,11 +7,28 @@ use Illuminate\Http\Request;
 
 class DivisionSettingsController extends Controller
 {
-    public function index(Division $division)
+    public function index(
+        Division $division
+    )
     {
+        $division->load([
+
+            'organization',
+
+            'roles',
+
+        ]);
+
         return view(
             'pages.settings.divisions.index',
-            compact('division')
+            [
+
+                'division' => $division,
+
+                'organization' =>
+                    $division->organization,
+
+            ]
         );
     }
 }

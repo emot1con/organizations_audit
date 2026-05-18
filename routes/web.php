@@ -54,9 +54,21 @@ Route::get(
     [OrganizationSettingsController::class, 'index']
 )->name('organizations.settings.index');
 
+// Setting Divisions
+Route::get(
+    '/divisions/{division}/settings',
+    [DivisionSettingsController::class, 'index']
+)->name('divisions.settings');
+
 
 // atur divisi
 Route::resource('organization.divisions', DivisionController::class);
+
+// Join divisi
+Route::post(
+    '/divisions/{division}/join',
+    [DivisionController::class, 'join']
+)->name('divisions.join');
 
 // Settings divisions
 Route::get(
@@ -69,7 +81,10 @@ Route::get(
 Route::resource('organization.users', OrganizationUserController::class);
 
 // Member Divisions
-Route::resource('division.users', DivisionUserController::class);
+Route::resource('division.users', DivisionUserController::class)
+->parameters([
+    'users' => 'member'
+]);
 
 
 // Roles
@@ -83,6 +98,11 @@ Route::put(
 
 // Role Divisi
 Route::resource('division.roles', DivisionRoleController::class);
+
+Route::put(
+    '/division/{division}/permissions',
+    [DivisionRoleController::class, 'updatePermissions']
+)->name('division.permissions.update');
 
 
 // Transaction Approve dan Reject
