@@ -35,9 +35,9 @@
                     name="category"
                     placeholder="Pilih kategori organisasi"
                     :options="[
-                        '1' => 'Himpunan',
-                        '2' => 'BEM',
-                        '3' => 'UKM',
+                        'Himpunan' => 'Himpunan',
+                        'BEM' => 'BEM',
+                        'UKM' => 'UKM',
                     ]"
                 />
 

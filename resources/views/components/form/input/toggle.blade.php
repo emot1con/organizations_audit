@@ -4,6 +4,8 @@
 
     'name' => '',
 
+    'value' => 1,
+
     'checked' => false,
 
     'disabled' => false,
@@ -13,18 +15,13 @@
 <div
     x-data="{
 
-        switcherToggle: @js(old($name, $checked))
+        switcherToggle: @js($checked)
 
     }"
 >
 
     <label
-        class="flex cursor-pointer items-center gap-3 text-sm font-medium
-        {{ $disabled
-            ? 'text-gray-400'
-            : 'text-gray-700 dark:text-gray-400'
-        }}
-        select-none"
+        class="flex cursor-pointer items-center gap-3 select-none"
     >
 
         <div class="relative">
@@ -32,6 +29,7 @@
             <input
                 type="checkbox"
                 name="{{ $name }}"
+                value="{{ $value }}"
                 class="sr-only"
                 x-model="switcherToggle"
                 {{ $disabled ? 'disabled' : '' }}
@@ -42,27 +40,34 @@
 
                 :class="
                     switcherToggle
-                        ? 'bg-brand-500 dark:bg-brand-500'
-                        : '{{ $disabled
-                            ? 'bg-gray-100 dark:bg-gray-800'
-                            : 'bg-gray-200 dark:bg-white/10'
-                        }}'
+                        ? 'bg-brand-500'
+                        : 'bg-gray-300 dark:bg-gray-700'
                 "
             ></div>
 
             <div
-                class="shadow-theme-sm absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white duration-300 ease-linear"
+                class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition"
 
                 :class="
                     switcherToggle
                         ? 'translate-x-full'
-                        : 'translate-x-0'
+                        : ''
                 "
             ></div>
 
         </div>
 
-        {{ $label }}
+        @if($label)
+
+            <span
+                class="text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+
+                {{ $label }}
+
+            </span>
+
+        @endif
 
     </label>
 

@@ -125,6 +125,19 @@ class UserOrganizationSeeder extends Seeder
             foreach ($organization->divisions as $division) {
 
                 /**
+                 * User yang sudah dipakai di division ini
+                 */
+                $usedUserIds = UserOrganization::where(
+                    'organization_id',
+                    $organization->id
+                )
+                    ->where(
+                        'division_id',
+                        $division->id
+                    )
+                    ->pluck('user_id');
+
+                /**
                  * =========================================
                  * Ketua Divisi
                  * =========================================
@@ -138,7 +151,12 @@ class UserOrganizationSeeder extends Seeder
                     ->where('name', 'Ketua Divisi')
                     ->first();
 
-                $leaderUserId = $users->random()->id;
+                $leaderUserId = $users
+                    ->whereNotIn('id', $usedUserIds)
+                    ->random()
+                    ->id;
+
+                $usedUserIds->push($leaderUserId);
 
                 /**
                  * Tambahkan role utama organization
@@ -165,7 +183,7 @@ class UserOrganizationSeeder extends Seeder
                 }
 
                 /**
-                 * Role divisi
+                 * Role division
                  */
                 UserOrganization::create([
                     'user_id' => $leaderUserId,
@@ -188,7 +206,12 @@ class UserOrganizationSeeder extends Seeder
                     ->where('name', 'Bendahara')
                     ->first();
 
-                $treasurerUserId = $users->random()->id;
+                $treasurerUserId = $users
+                    ->whereNotIn('id', $usedUserIds)
+                    ->random()
+                    ->id;
+
+                $usedUserIds->push($treasurerUserId);
 
                 $exists = UserOrganization::where(
                     'user_id',
@@ -232,7 +255,12 @@ class UserOrganizationSeeder extends Seeder
                     ->where('name', 'Sekretaris')
                     ->first();
 
-                $secretaryUserId = $users->random()->id;
+                $secretaryUserId = $users
+                    ->whereNotIn('id', $usedUserIds)
+                    ->random()
+                    ->id;
+
+                $usedUserIds->push($secretaryUserId);
 
                 $exists = UserOrganization::where(
                     'user_id',

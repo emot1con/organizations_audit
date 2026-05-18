@@ -7,7 +7,8 @@
 <div class="space-y-6">
 
     {{-- Header --}}
-    <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+    <div
+        class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
 
         <div class="flex items-start justify-between flex-wrap gap-5">
 
@@ -42,16 +43,17 @@
 
     </div>
 
-    {{-- Permission Table --}}
-    <div class="rounded-2xl border border-gray-200 bg-white pt-4 dark:border-gray-800 dark:bg-white/[0.03]">
+    {{-- Table --}}
+    <div
+        class="rounded-2xl border border-gray-200 bg-white pt-4 dark:border-gray-800 dark:bg-white/[0.03]">
 
-        {{-- Header --}}
         <div
             class="mb-4 flex flex-col gap-4 px-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
 
             <div>
 
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
+                <h3
+                    class="text-lg font-semibold text-gray-800 dark:text-white/90">
 
                     Organization Permissions
 
@@ -67,20 +69,24 @@
 
         </div>
 
-        {{-- Table --}}
         <div class="overflow-hidden">
 
             <div class="max-w-full overflow-x-auto px-5">
 
-                <form action="#" method="POST">
+                <form
+                    action="{{ route('organization.permissions.update', $organization) }}"
+                    method="POST"
+                >
 
                     @csrf
+                    @method('PUT')
 
                     <table class="min-w-full">
 
                         <thead>
 
-                            <tr class="border-y border-gray-200 dark:border-gray-700">
+                            <tr
+                                class="border-y border-gray-200 dark:border-gray-700">
 
                                 <th
                                     class="px-5 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">
@@ -89,39 +95,23 @@
 
                                 </th>
 
-                                <th
-                                    class="px-5 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400">
+                                @foreach($permissions as $permission)
 
-                                    Create
+                                    <th
+                                        class="px-5 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400">
 
-                                </th>
+                                        {{ ucfirst($permission->name) }}
 
-                                <th
-                                    class="px-5 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400">
+                                    </th>
 
-                                    Read
-
-                                </th>
-
-                                <th
-                                    class="px-5 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400">
-
-                                    Update
-
-                                </th>
-
-                                <th
-                                    class="px-5 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400">
-
-                                    Delete
-
-                                </th>
+                                @endforeach
 
                             </tr>
 
                         </thead>
 
-                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <tbody
+                            class="divide-y divide-gray-200 dark:divide-gray-700">
 
                             @forelse($roles as $role)
 
@@ -130,7 +120,8 @@
                                     {{-- Role --}}
                                     <td class="px-5 py-4">
 
-                                        <div class="flex items-center gap-3">
+                                        <div
+                                            class="flex items-center gap-3">
 
                                             <div
                                                 class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-500 font-semibold text-white">
@@ -148,9 +139,10 @@
 
                                                 </h4>
 
-                                                <p class="text-sm text-gray-500">
+                                                <p
+                                                    class="text-sm text-gray-500">
 
-                                                    {{ $role->user_organizations_count }}
+                                                    {{ $role->userOrganizations->count() }}
                                                     Member
 
                                                 </p>
@@ -161,61 +153,47 @@
 
                                     </td>
 
-                                    {{-- Create --}}
-                                    <td class="px-5 py-4 text-center">
+                                    {{-- Permissions --}}
+                                    @foreach($permissions as $permission)
 
-                                        <div class="flex justify-center">
+                                        <td
+                                            class="px-5 py-4 text-center">
 
-                                            <x-form.input.toggle
-                                                name="permissions[{{ $role->id }}][create]"
-                                                :checked="false"
-                                            />
+                                            <div
+                                                class="flex justify-center">
 
-                                        </div>
+                                                @php
 
-                                    </td>
+                                                    $isOwnerRole = in_array(
+                                                        strtolower($role->name),
+                                                        [
 
-                                    {{-- Read --}}
-                                    <td class="px-5 py-4 text-center">
+                                                            'ketua umum',
 
-                                        <div class="flex justify-center">
+                                                            'owner',
 
-                                            <x-form.input.toggle
-                                                name="permissions[{{ $role->id }}][read]"
-                                                :checked="true"
-                                            />
+                                                        ]
+                                                    );
 
-                                        </div>
+                                                @endphp
 
-                                    </td>
+                                                <x-form.input.toggle
+                                                    name="permissions[{{ $role->id }}][]"
+                                                    value="{{ $permission->id }}"
+                                                    :checked="$role
+                                                        ->permissions
+                                                        ->contains(
+                                                            'id',
+                                                            $permission->id
+                                                        )"
+                                                    :disabled="$isOwnerRole"
+                                                />
 
-                                    {{-- Update --}}
-                                    <td class="px-5 py-4 text-center">
+                                            </div>
 
-                                        <div class="flex justify-center">
+                                        </td>
 
-                                            <x-form.input.toggle
-                                                name="permissions[{{ $role->id }}][update]"
-                                                :checked="false"
-                                            />
-
-                                        </div>
-
-                                    </td>
-
-                                    {{-- Delete --}}
-                                    <td class="px-5 py-4 text-center">
-
-                                        <div class="flex justify-center">
-
-                                            <x-form.input.toggle
-                                                name="permissions[{{ $role->id }}][delete]"
-                                                :checked="false"
-                                            />
-
-                                        </div>
-
-                                    </td>
+                                    @endforeach
 
                                 </tr>
 
@@ -223,7 +201,9 @@
 
                                 <tr>
 
-                                    <td colspan="5" class="px-5 py-10 text-center">
+                                    <td
+                                        colspan="{{ $permissions->count() + 1 }}"
+                                        class="px-5 py-10 text-center">
 
                                         <h3
                                             class="text-lg font-semibold text-gray-700 dark:text-white">

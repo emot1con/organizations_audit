@@ -6,6 +6,40 @@
 
 <div class="space-y-6">
 
+    {{-- Success Message --}}
+    @if (session('success'))
+
+        <div
+            class="rounded-2xl border border-green-200 bg-green-50 p-4 text-sm text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-300">
+
+            {{ session('success') }}
+
+        </div>
+
+    @endif
+
+    {{-- Error Message --}}
+    @if ($errors->any())
+
+        <div
+            class="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300">
+
+            <ul class="space-y-1">
+
+                @foreach ($errors->all() as $error)
+
+                    <li>
+                        • {{ $error }}
+                    </li>
+
+                @endforeach
+
+            </ul>
+
+        </div>
+
+    @endif
+
     {{-- Header --}}
     <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
 
@@ -226,20 +260,42 @@
                                         $type === 'organization' &&
                                         $transaction->status === 'pending'
                                     )
+                                    
+                                        <form
+                                            action="{{ route('organizations.transactions.approve', [$organization, $transaction]) }}"
+                                            method="POST"
+                                        >
+
+                                            @csrf
+                                            @method('PATCH')
+
+                                            <button
+                                                type="submit"
+                                                class="rounded-lg bg-green-500 px-3 py-2 text-xs font-medium text-white hover:bg-green-600">
+
+                                                Approve
+
+                                            </button>
+
+                                        </form>
+
+                                        <form
+                                        action="{{ route('organizations.transactions.reject', [$organization, $transaction]) }}"
+                                        method="POST"
+                                    >
+
+                                        @csrf
+                                        @method('PATCH')
 
                                         <button
-                                            class="rounded-lg bg-green-500 px-3 py-2 text-xs font-medium text-white hover:bg-green-600">
-
-                                            Approve
-
-                                        </button>
-
-                                        <button
+                                            type="submit"
                                             class="rounded-lg bg-red-500 px-3 py-2 text-xs font-medium text-white hover:bg-red-600">
 
                                             Tolak
 
                                         </button>
+
+                                    </form>
 
                                     @endif
 

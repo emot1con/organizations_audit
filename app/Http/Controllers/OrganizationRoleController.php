@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Organization;
+use App\Models\OrganizationRole;
+use App\Models\Permission;
 use Illuminate\Http\Request;
 
 class OrganizationRoleController extends Controller
@@ -12,18 +14,30 @@ class OrganizationRoleController extends Controller
      */
     public function index(Organization $organization)
     {
-        $roles = $organization->roles()
-            ->where('scope', 'organization')
-            ->whereNull('division_id')
-            ->withCount('userOrganizations')
-            ->orderBy('user_organizations_count')
-            ->get();
+        $organization->load([
+
+            'roles.permissions',
+
+            'roles.userOrganizations',
+
+        ]);
+
+        $permissions = Permission::where(
+            'scope',
+            'organization'
+        )->get();
 
         return view(
             'pages.roles.organizations.index',
             [
+
                 'organization' => $organization,
-                'roles' => $roles,
+
+                'roles' => $organization->roles
+                    ->where('scope', 'organization'),
+
+                'permissions' => $permissions,
+
             ]
         );
     }
@@ -33,18 +47,80 @@ class OrganizationRoleController extends Controller
      */
     public function create(Organization $organization)
     {
+        $permissions = Permission::where(
+            'scope',
+            'organization'
+        )->get();
+
         return view(
             'pages.roles.organizations.create',
-            compact('organization')
+            [
+
+                'organization' => $organization,
+
+                'permissions' => $permissions,
+
+            ]
         );
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(
+    Request $request,
+    Organization $organization
+    )
     {
-        //
+        /**
+         * Validation
+         */
+        $request->validate([
+
+            'name' => 'required|string|max:255',
+
+            'permissions' => 'nullable|array',
+
+            'permissions.*' => 'exists:permissions,id',
+
+        ]);
+
+        /**
+         * Create Role
+         */
+        $role = OrganizationRole::create([
+
+            'organization_id' => $organization->id,
+
+            'division_id' => null,
+
+            'name' => $request->name,
+
+            'scope' => 'organization',
+
+        ]);
+
+        /**
+         * Attach Permissions
+         */
+        $role->permissions()->sync(
+
+            $request->permissions ?? []
+
+        );
+
+        /**
+         * Redirect
+         */
+        return redirect()
+            ->route(
+                'organizations.settings.index',
+                $organization
+            )
+            ->with(
+                'success',
+                'Role organization berhasil dibuat.'
+            );
     }
 
     /**
@@ -66,11 +142,49 @@ class OrganizationRoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function updatePermissions(
+    Request $request,
+    Organization $organization
+    )
     {
-        //
-    }
+        $roles = OrganizationRole::where(
+            'organization_id',
+            $organization->id
+        )
+            ->where('scope', 'organization')
+            ->get();
 
+        foreach ($roles as $role) {
+
+            $isProtected = in_array(
+                strtolower($role->name),
+                [
+
+                    'ketua umum',
+
+                    'owner',
+
+                ]
+            );
+
+            if ($isProtected) {
+
+                continue;
+
+            }
+
+            $permissions = $request->permissions[$role->id] ?? [];
+
+            $role->permissions()->sync(
+                $permissions
+            );
+        }
+
+        return back()->with(
+            'success',
+            'Permission berhasil diperbarui.'
+        );
+    }
     /**
      * Remove the specified resource from storage.
      */

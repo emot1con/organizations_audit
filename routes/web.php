@@ -55,7 +55,7 @@ Route::get(
 )->name('organizations.settings.index');
 
 
-// atur dicisi
+// atur divisi
 Route::resource('organization.divisions', DivisionController::class);
 
 // Settings divisions
@@ -76,8 +76,27 @@ Route::resource('division.users', DivisionUserController::class);
 // Role Organisasi
 Route::resource('organization.roles', OrganizationRoleController::class);
 
+Route::put(
+    '/organization/{organization}/permissions',
+    [OrganizationRoleController::class, 'updatePermissions']
+)->name('organization.permissions.update');
+
 // Role Divisi
 Route::resource('division.roles', DivisionRoleController::class);
+
+
+// Transaction Approve dan Reject
+
+Route::patch(
+    '/organizations/{organization}/transactions/{transaction}/approve',
+    [TransactionOrganizationController::class, 'approve']
+)->name('organizations.transactions.approve');
+
+Route::patch(
+    '/organizations/{organization}/transactions/{transaction}/reject',
+    [TransactionOrganizationController::class, 'reject']
+)->name('organizations.transactions.reject');
+
 
 
 // calender pages

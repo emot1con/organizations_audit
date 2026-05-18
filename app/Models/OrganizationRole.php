@@ -39,4 +39,12 @@ class OrganizationRole extends Model
     {
         return $this->hasMany(UserOrganization::class, 'role_id');
     }
+
+    public function permissions()
+    {
+        return $this->belongsToMany(
+            Permission::class,
+            'role_permissions'
+        );
+    }
 }
