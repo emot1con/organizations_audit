@@ -26,12 +26,14 @@
             {{-- Action Buttons --}}
             <div class="flex gap-3">
 
+                @if(auth()->user()->hasOrganizationPermission($organization->id,'transaksi'))
                 <a href="{{ route('organizations.transactions.create', $organization) }}"
                     class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600 transition">
 
                     Tambah Transaksi
 
                 </a>
+                @endif
 
                 <a href="{{ route('organizations.transactions.index', $organization) }}"
                     class="inline-flex items-center justify-center rounded-xl bg-green-600 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-green-800 transition">
@@ -77,14 +79,14 @@
         </div>
 
         {{-- Total Members --}}
-        <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+        <div class="rounded-2x  l border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
 
             <span class="text-sm text-gray-500 ">
                 Total Member
             </span>
 
             <h2 class="mt-3 text-3xl font-bold text-gray-800 dark:text-white">
-                {{ $organization->userOrganizations->count() }}
+                {{ $organization->userOrganizations->whereNull('division_id')->count()}}
             </h2>
 
         </div>

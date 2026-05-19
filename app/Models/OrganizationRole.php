@@ -44,7 +44,9 @@ class OrganizationRole extends Model
     {
         return $this->belongsToMany(
             Permission::class,
-            'role_permissions'
+            'role_permissions',
+            'organization_role_id',
+            'permission_id'
         );
     }
 }

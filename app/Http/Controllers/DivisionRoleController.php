@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Division;
 use App\Models\OrganizationRole;
 use App\Models\Permission;
+use App\Models\UserOrganization;
 use Illuminate\Http\Request;
 
 class DivisionRoleController extends Controller
@@ -259,8 +260,101 @@ class DivisionRoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(
+    Division $division,
+    OrganizationRole $role
+    )
     {
-        //
+        /**
+         * Tidak boleh hapus
+         * ketua divisi
+         */
+        if (
+            strtolower($role->name)
+            === 'ketua divisi'
+        ) {
+
+            return back()->withErrors([
+
+                'error' =>
+                    'Role Ketua Divisi tidak dapat dihapus.'
+
+            ]);
+
+        }
+
+        /**
+         * Ambil role anggota
+         */
+        $memberRole = OrganizationRole::where(
+
+                'organization_id',
+                $division->organization_id
+
+            )
+            ->where(
+                'division_id',
+                $division->id
+            )
+            ->where(
+                'scope',
+                'division'
+            )
+            ->where(
+                'name',
+                'Anggota'
+            )
+            ->first();
+
+        /**
+         * Role anggota tidak ditemukan
+         */
+        if (!$memberRole) {
+
+            return back()->withErrors([
+
+                'error' =>
+                    'Role anggota division tidak ditemukan.'
+
+            ]);
+
+        }
+
+        /**
+         * Pindahkan seluruh member
+         * ke role anggota
+         */
+        UserOrganization::where(
+                'role_id',
+                $role->id
+            )
+            ->where(
+                'division_id',
+                $division->id
+            )
+            ->update([
+
+                'role_id' =>
+                    $memberRole->id,
+
+            ]);
+
+        /**
+         * Hapus permissions
+         */
+        $role->permissions()->detach();
+
+        /**
+         * Hapus role
+         */
+        $role->delete();
+
+        /**
+         * Redirect
+         */
+        return back()->with(
+            'success',
+            'Role division berhasil dihapus.'
+        );
     }
 }

@@ -6,6 +6,7 @@ use App\Models\Division;
 use App\Models\Organization;
 use App\Models\OrganizationRole;
 use App\Models\Permission;
+use App\Models\Transaction;
 use App\Models\UserOrganization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -180,6 +181,12 @@ class DivisionController extends Controller
             )
             ->exists();
 
+            /**
+         * Cek ketua umum
+         */
+        $isOwner = $division->organization
+            ->owner_id === Auth::id();
+
         return view(
             'pages.divisions.show',
             [
@@ -187,6 +194,8 @@ class DivisionController extends Controller
                 'division' => $division,
 
                 'isJoined' => $isJoined,
+
+                'isOwner' => $isOwner,
 
             ]
         );
@@ -272,17 +281,81 @@ class DivisionController extends Controller
     /**
      * Delete division
      */
-    public function destroy(Division $division)
+    public function destroy(
+    Division $division
+    )
     {
-        $this->authorizeDivisionAccess($division);
+        /**
+         * Ambil seluruh role division
+         */
+        $roles = OrganizationRole::where(
 
-        $organization = $division->organization;
+                'organization_id',
+                $division->organization_id
 
+            )
+            ->where(
+                'division_id',
+                $division->id
+            )
+            ->where(
+                'scope',
+                'division'
+            )
+            ->get();
+
+        /**
+         * Hapus seluruh member division
+         */
+        UserOrganization::where(
+                'division_id',
+                $division->id
+            )
+            ->delete();
+
+        /**
+         * Hapus seluruh permission role
+         */
+        foreach ($roles as $role) {
+
+            $role->permissions()->detach();
+
+        }
+
+        /**
+         * Hapus transaksi division
+         */
+        Transaction::where(
+            'division_id',
+            $division->id
+        )->delete();
+
+        /**
+         * Hapus seluruh role division
+         */
+        OrganizationRole::where(
+                'division_id',
+                $division->id
+            )
+            ->delete();
+
+        /**
+         * Hapus division
+         */
         $division->delete();
 
+        /**
+         * Redirect
+         */
         return redirect()
-            ->route('organizations.show', $organization)
-            ->with('success', 'Divisi berhasil dihapus');
+            ->route(
+                'organizations.show',
+                $division->organization_id
+            )
+            ->with(
+                'success',
+                'Divisi berhasil dihapus.'
+            );
     }
 
     /**

@@ -230,8 +230,95 @@ class DivisionUserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(
+    Division $division,
+    UserOrganization $member
+    )
     {
-        //
+        /**
+         * Tidak boleh keluarkan
+         * ketua divisi
+         */
+        if (
+            strtolower($member->role?->name)
+            === 'ketua divisi'
+        ) {
+
+            return back()->withErrors([
+
+                'error' =>
+                    'Ketua divisi tidak dapat dikeluarkan.'
+
+            ]);
+
+        }
+
+        /**
+         * Pastikan member
+         * berasal dari divisi ini
+         */
+        if (
+            $member->division_id
+            !== $division->id
+        ) {
+
+            abort(404);
+
+        }
+
+        /**
+         * Ambil role anggota organization
+         */
+        $organizationRole = OrganizationRole::where(
+
+                'organization_id',
+                $division->organization_id
+
+            )
+            ->where(
+                'scope',
+                'organization'
+            )
+            ->whereNull('division_id')
+            ->where(
+                'name',
+                'Anggota'
+            )
+            ->first();
+
+        /**
+         * Role organization tidak ditemukan
+         */
+        if (!$organizationRole) {
+
+            return back()->withErrors([
+
+                'error' =>
+                    'Role anggota organisasi tidak ditemukan.'
+
+            ]);
+
+        }
+
+        /**
+         * Keluarkan dari division
+         */
+        $member->update([
+
+            'division_id' =>
+                null,
+
+            'role_id' =>
+                $organizationRole->id,
+
+        ]);
+
+        /**
+         * Redirect
+         */
+        return back()->with(
+            'success',
+            'Member berhasil dikeluarkan dari divisi.'
+        );
     }
 }

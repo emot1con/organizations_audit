@@ -62,7 +62,7 @@
                     <div class="mt-auto flex items-center justify-between pt-6">
 
                         <span class="text-gray-500 dark:text-gray-400 text-sm">
-                            👥 {{ $organization->userOrganizations->count() }} Member
+                            👥 {{ $organization->total_members }} Member
                         </span>
 
                         @if($isJoined)

@@ -100,11 +100,14 @@ class OrganizationMemberController extends Controller
         ]);
 
         return redirect()
-            ->route('organizations.index')
-            ->with(
-                'success',
-                'Berhasil bergabung dengan organisasi.'
-            );
+        ->route(
+            'organizations.show',
+            $organization
+        )
+        ->with(
+            'success',
+            'Berhasil bergabung dengan organisasi.'
+        );
     }
 
     /**

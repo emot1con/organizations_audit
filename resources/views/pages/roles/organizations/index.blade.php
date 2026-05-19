@@ -231,12 +231,26 @@
                     </table>
 
                     {{-- Footer --}}
-                    <div
-                        class="flex items-center justify-end border-t border-gray-200 px-6 py-5 dark:border-gray-800">
+                    
+                        <div
+                        class="flex items-center justify-end gap-3 border-t border-gray-200 px-6 py-5 dark:border-gray-800"
+                    >
 
+                        {{-- Back --}}
+                        <a
+                            href="{{ route('organizations.settings.index', $organization) }}"
+                            class="inline-flex h-11 items-center justify-center rounded-xl border border-gray-300 bg-white px-5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.05] transition"
+                        >
+
+                            Back
+
+                        </a>
+
+                        {{-- Submit --}}
                         <button
                             type="submit"
-                            class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs transition hover:bg-brand-600">
+                            class="inline-flex h-11 items-center justify-center rounded-xl bg-brand-500 px-5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-brand-600"
+                        >
 
                             Simpan Permission
 

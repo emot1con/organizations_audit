@@ -35,4 +35,6 @@ class UserOrganization extends Model
     {
         return $this->belongsTo(Division::class);
     }
+
+
 }

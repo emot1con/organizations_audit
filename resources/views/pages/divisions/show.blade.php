@@ -11,12 +11,14 @@
 
         <div class="flex items-start justify-between flex-wrap gap-5">
 
+            {{-- LEFT --}}
             <div>
 
-                <div class="flex items-center gap-3 mb-3">
+                <div class="mb-3 flex items-center gap-3">
 
                     <span
-                        class="bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300 text-xs px-3 py-1 rounded-full">
+                        class="rounded-full bg-blue-100 px-3 py-1 text-xs text-blue-600 dark:bg-blue-900 dark:text-blue-300"
+                    >
 
                         {{ $division->category }}
 
@@ -25,60 +27,89 @@
                 </div>
 
                 <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
+
                     {{ $division->name }}
+
                 </h1>
 
-                <p class="mt-3 text-gray-500 dark:text-gray-400 max-w-2xl">
+                <p class="mt-3 max-w-2xl text-gray-500 dark:text-gray-400">
+
                     Divisi ini berada di dalam organisasi
                     <span class="font-semibold">
+
                         {{ $division->organization->name }}
+
                     </span>
+
                 </p>
 
             </div>
 
-            {{-- Action Buttons --}}
-            <div class="flex gap-3">
+            {{-- RIGHT --}}
+            <div class="flex flex-wrap items-center justify-end gap-3">
 
-                @if(!$isJoined)
-
-                <form
-                    action="{{ route('divisions.join', $division) }}"
-                    method="POST"
+                {{-- Back --}}
+                <a
+                    href="{{ route('organizations.show', $division->organization) }}"
+                    class="inline-flex h-11 items-center justify-center rounded-xl border border-gray-300 bg-white px-5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.05] transition"
                 >
 
-                    @csrf
+                    Organisasi
 
-                    <button
-                        type="submit"
-                        class="inline-flex items-center justify-center rounded-xl bg-orange-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-orange-600 transition">
+                </a>
 
-                        Join Division
+                {{-- Join --}}
+                @if(!$isJoined && !$isOwner)
 
-                    </button>
+                    <form
+                        action="{{ route('divisions.join', $division) }}"
+                        method="POST"
+                    >
 
-                </form>
+                        @csrf
 
-            @endif
+                        <button
+                            type="submit"
+                            class="inline-flex h-11 items-center justify-center rounded-xl bg-orange-500 px-5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-orange-600"
+                        >
 
-                <a href="{{ route('divisions.transactions.create', $division) }}"
-                    class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600 transition">
+                            Join Division
+
+                        </button>
+
+                    </form>
+
+                @endif
+
+                @if(auth()->user()->hasDivisionPermission($division->id,'transaksi'))
+
+                {{-- Tambah Transaksi --}}
+                <a
+                    href="{{ route('divisions.transactions.create', $division) }}"
+                    class="inline-flex h-11 items-center justify-center rounded-xl bg-brand-500 px-5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-brand-600"
+                >
 
                     Tambah Transaksi
 
                 </a>
 
-                <a href="{{ route('divisions.transactions.index', $division) }}"
-                    class="inline-flex items-center justify-center rounded-xl bg-green-600 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-green-800 transition">
+                @endif
+
+                {{-- Lihat Transaksi --}}
+                <a
+                    href="{{ route('divisions.transactions.index', $division) }}"
+                    class="inline-flex h-11 items-center justify-center rounded-xl bg-green-600 px-5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-green-800"
+                >
 
                     Lihat Transaksi
 
-                </a>    
+                </a>
 
-                
-
-                <a href="{{ route('divisions.settings', $division) }}"
-                    class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.05] transition">
+                {{-- Settings --}}
+                <a
+                    href="{{ route('divisions.settings', $division) }}"
+                    class="inline-flex h-11 items-center justify-center rounded-xl border border-gray-300 bg-white px-5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.05] transition"
+                >
 
                     ⚙ Settings
 
@@ -101,7 +132,7 @@
             </span>
 
             <h2 class="mt-3 text-3xl font-bold text-gray-800 dark:text-white">
-                {{ $division->userOrganizations->count() }}
+                {{ $division->userOrganizations->unique('user_id')->count() }}
             </h2>
 
         </div>

@@ -11,12 +11,14 @@
 
         <div class="flex items-start justify-between flex-wrap gap-5">
 
+            {{-- LEFT --}}
             <div>
 
-                <div class="flex items-center gap-3 mb-3">
+                <div class="mb-3 flex items-center gap-3">
 
                     <span
-                        class="bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300 text-xs px-3 py-1 rounded-full">
+                        class="rounded-full bg-blue-100 px-3 py-1 text-xs text-blue-600 dark:bg-blue-900 dark:text-blue-300"
+                    >
 
                         {{ $organization->category_organizations }}
 
@@ -25,26 +27,46 @@
                 </div>
 
                 <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
+
                     {{ $organization->name }}
+
                 </h1>
 
-                <p class="mt-3 text-gray-500 dark:text-gray-400 max-w-2xl">
+                <p class="mt-3 max-w-2xl text-gray-500 dark:text-gray-400">
+
                     Seluruh pengaturan divisi yang terdapat di dalam organisasi
                     <span class="font-semibold">
+
                         {{ $organization->name }}
+
                     </span>
+
                 </p>
 
             </div>
 
-            <a
-                href="{{ route('organization.divisions.create', $organization) }}"
-                class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-5 py-3 text-sm font-medium text-white transition hover:bg-brand-600"
-            >
+            {{-- RIGHT --}}
+            <div class="flex items-center gap-3 flex-wrap">
 
-                Tambah Divisi
+                <a
+                    href="{{ url()->previous() }}"
+                    class="inline-flex h-11 items-center justify-center rounded-xl border border-gray-300 bg-white px-5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.05] transition"
+                >
 
-            </a>
+                    Back
+
+                </a>
+
+                <a
+                    href="{{ route('organization.divisions.create', $organization) }}"
+                    class="inline-flex h-11 items-center justify-center rounded-xl bg-brand-500 px-5 text-sm font-medium text-white transition hover:bg-brand-600"
+                >
+
+                    Tambah Divisi
+
+                </a>
+
+            </div>
 
         </div>
 
@@ -225,7 +247,7 @@
 
                                         {{-- Delete --}}
                                         <form
-                                            action="{{ route('organization.divisions.destroy', [$organization, $division]) }}"
+                                            action="{{ route('divisions.destroy', $division) }}"
                                             method="POST"
                                             onsubmit="return confirm('Yakin ingin menghapus divisi ini?')"
                                         >

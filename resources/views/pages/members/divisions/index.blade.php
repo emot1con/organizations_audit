@@ -11,12 +11,14 @@
 
         <div class="flex items-start justify-between flex-wrap gap-5">
 
+            {{-- LEFT --}}
             <div>
 
-                <div class="flex items-center gap-3 mb-3">
+                <div class="mb-3 flex items-center gap-3">
 
                     <span
-                        class="bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-300 text-xs px-3 py-1 rounded-full">
+                        class="rounded-full bg-orange-100 px-3 py-1 text-xs text-orange-600 dark:bg-orange-900 dark:text-orange-300"
+                    >
 
                         {{ $division->category }}
 
@@ -30,7 +32,7 @@
 
                 </h1>
 
-                <p class="mt-3 text-gray-500 dark:text-gray-400 max-w-2xl">
+                <p class="mt-3 max-w-2xl text-gray-500 dark:text-gray-400">
 
                     Seluruh anggota yang tergabung di dalam divisi
                     <span class="font-semibold">
@@ -41,6 +43,21 @@
 
                 </p>
 
+            </div>
+
+            {{-- RIGHT --}}
+            <div class="flex items-center gap-3 flex-wrap">
+
+
+                {{-- Back --}}
+                <a
+                    href="{{ route('divisions.settings', $division) }}"
+                    class="inline-flex h-11 items-center justify-center rounded-xl border border-gray-300 bg-white px-5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.05] transition"
+                >
+
+                    Back
+
+                </a>
             </div>
 
         </div>

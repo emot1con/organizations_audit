@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Organization;
 use App\Models\OrganizationRole;
 use App\Models\Permission;
+use App\Models\UserOrganization;
 use Illuminate\Http\Request;
 
 class OrganizationRoleController extends Controller
@@ -188,8 +189,92 @@ class OrganizationRoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(
+    Organization $organization,
+    OrganizationRole $role
+    )
     {
-        //
+        /**
+         * Tidak boleh hapus owner
+         */
+        if (
+            strtolower($role->name)
+            === 'owner'
+        ) {
+
+            return back()->withErrors([
+
+                'error' =>
+                    'Role owner tidak dapat dihapus.'
+
+            ]);
+
+        }
+
+        /**
+         * Ambil role anggota
+         */
+        $memberRole = OrganizationRole::where(
+
+                'organization_id',
+                $organization->id
+
+            )
+            ->where(
+                'scope',
+                'organization'
+            )
+            ->where(
+                'name',
+                'Anggota'
+            )
+            ->first();
+
+        /**
+         * Role anggota tidak ditemukan
+         */
+        if (!$memberRole) {
+
+            return back()->withErrors([
+
+                'error' =>
+                    'Role anggota tidak ditemukan.'
+
+            ]);
+
+        }
+
+        /**
+         * Pindahkan seluruh member
+         * ke role anggota
+         */
+        UserOrganization::where(
+                'role_id',
+                $role->id
+            )
+            ->update([
+
+                'role_id' =>
+                    $memberRole->id,
+
+            ]);
+
+        /**
+         * Hapus permissions
+         */
+        $role->permissions()->detach();
+
+        /**
+         * Hapus role
+         */
+        $role->delete();
+
+        /**
+         * Redirect
+         */
+        return back()->with(
+            'success',
+            'Role berhasil dihapus.'
+        );
     }
 }

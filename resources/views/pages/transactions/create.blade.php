@@ -232,7 +232,15 @@
                 @endif
 
                 {{-- Button --}}
-                <div class="flex justify-end">
+                <div class="flex justify-end gap-3">
+
+                    <a
+                        href="{{ url()->previous() }}"
+                        class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.05] transition"
+                    >
+
+                        Back
+                    </a>
 
                     <x-form.input.button type="submit">
 

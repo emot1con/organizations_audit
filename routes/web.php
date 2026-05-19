@@ -70,15 +70,14 @@ Route::post(
     [DivisionController::class, 'join']
 )->name('divisions.join');
 
-// Settings divisions
-Route::get(
-    '/divisions/{division}/settings',
-    [DivisionSettingsController::class, 'index']
-)->name('divisions.settings');
+
 
 // Member 
 // Member Organisasi
-Route::resource('organization.users', OrganizationUserController::class);
+Route::resource('organization.users', OrganizationUserController::class)
+->parameters([
+    'users' => 'member'
+]);
 
 // Member Divisions
 Route::resource('division.users', DivisionUserController::class)

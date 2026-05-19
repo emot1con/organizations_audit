@@ -8,16 +8,19 @@
 
     {{-- Header --}}
     <div
-        class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+    class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]"
+    >
 
         <div class="flex items-start justify-between flex-wrap gap-5">
 
+            {{-- LEFT --}}
             <div>
 
                 <div class="mb-3">
 
                     <span
-                        class="rounded-full bg-orange-100 px-4 py-1 text-sm font-medium text-orange-600 dark:bg-orange-900 dark:text-orange-300">
+                        class="rounded-full bg-orange-100 px-4 py-1 text-sm font-medium text-orange-600 dark:bg-orange-900 dark:text-orange-300"
+                    >
 
                         Division Settings
 
@@ -39,6 +42,21 @@
 
             </div>
 
+            {{-- RIGHT --}}
+            <div class="flex items-center gap-3 flex-wrap">
+
+                {{-- Back --}}
+                <a
+                    href="{{ route('divisions.show', $division) }}"
+                    class="inline-flex h-11 items-center justify-center rounded-xl border border-gray-300 bg-white px-5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.05] transition"
+                >
+
+                    kembali Ke Divisi
+
+                </a>
+
+            </div>
+
         </div>
 
     </div>
@@ -49,6 +67,7 @@
         {{-- Left --}}
         <div class="space-y-6">
 
+        @if(auth()->user()->hasDivisionPermission($division->id,'divisi'))
             {{-- Division --}}
             <div
                 class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
@@ -61,13 +80,14 @@
 
                 <div class="flex flex-col gap-3">
 
-                    <a
-                        href="{{ route('divisions.edit', $division) }}"
-                        class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.05] transition">
+                    
+                        <a
+                            href="{{ route('divisions.edit', $division) }}"
+                            class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.05] transition">
 
-                        Edit Division
+                            Edit Division
 
-                    </a>
+                        </a>
 
                     <a
                         href="{{ route('division.users.index', $division) }}"
@@ -76,12 +96,33 @@
                         Manage Members
 
                     </a>
+                    <form
+                        action="{{ route('divisions.destroy', $division) }}"
+                        method="POST"
+                        onsubmit="return confirm('Yakin ingin menghapus divisi ini?')"
+                    >
+
+                        @csrf
+                        @method('DELETE')
+
+                        <button
+                            type="submit"
+                            class="inline-flex w-full items-center justify-center rounded-xl border border-red-300 bg-white px-5 py-3 text-sm font-medium text-red-500 hover:bg-red-50 dark:border-red-800 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-red-900/20 transition">
+
+                            Hapus Divisi
+
+                        </button>
+
+                    </form>
 
                 </div>
 
             </div>
 
+            @endif
+
             {{-- Permissions --}}
+            @if(auth()->user()->hasDivisionPermission($division->id,'role'))
             <div
                 class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
 
@@ -104,6 +145,7 @@
                 </div>
 
             </div>
+            @endif
 
         </div>
 
@@ -122,7 +164,7 @@
                         Roles
 
                     </h2>
-
+                @if(auth()->user()->hasDivisionPermission($division->id,'divisi'))
                     <a
                         href="{{ route('division.roles.create', $division) }}"
                         class="rounded-xl bg-orange-500 px-4 py-2 text-sm font-medium text-white hover:bg-orange-600 transition">
@@ -130,8 +172,10 @@
                         Tambah Role
 
                     </a>
+                @endif
 
                 </div>
+                
 
                 {{-- Roles List --}}
                 <div class="space-y-3">
@@ -171,7 +215,7 @@
 
                                     @csrf
                                     @method('DELETE')
-
+                                @if(auth()->user()->hasDivisionPermission($division->id,'divisi'))
                                     <button
                                         type="submit"
                                         class="flex h-9 w-9 items-center justify-center rounded-xl border border-red-200 text-red-500 hover:bg-red-50 dark:border-red-800 dark:hover:bg-red-900/20 transition">
@@ -179,6 +223,7 @@
                                         ✕
 
                                     </button>
+                                @endif
 
                                 </form>
 

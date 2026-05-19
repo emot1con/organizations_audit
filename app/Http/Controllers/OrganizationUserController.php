@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Organization;
 use App\Models\OrganizationRole;
+use App\Models\UserOrganization;
 use Illuminate\Http\Request;
 
 class OrganizationUserController extends Controller
@@ -177,8 +178,56 @@ class OrganizationUserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+   public function destroy(
+    Organization $organization,
+    UserOrganization $member
+    )
     {
-        //
+
+        /**
+         * Tidak boleh keluarkan owner
+         */
+        if (
+            $organization->owner_id
+            === $member->user_id
+        ) {
+
+            return back()->withErrors([
+
+                'error' =>
+                    'Owner organisasi tidak dapat dikeluarkan.'
+
+            ]);
+
+        }
+
+        /**
+         * Simpan user id
+         */
+        $userId = $member->user_id;
+
+        /**
+         * Hapus seluruh membership
+         * organization + division
+         */
+        UserOrganization::where(
+                'organization_id',
+                $organization->id
+            )
+            ->where(
+                'user_id',
+                $userId
+            )
+            ->delete();
+
+        
+
+        /**
+         * Redirect
+         */
+        return back()->with(
+            'success',
+            'Member berhasil dikeluarkan dari organisasi.'
+        );
     }
 }

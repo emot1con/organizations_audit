@@ -12,18 +12,34 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $organizations = Organization::whereHas(
-            'userOrganizations',
+        'userOrganizations',
+        function ($query) {
+
+            $query->where(
+                'user_id',
+                Auth::id()
+            );
+
+        }
+    )
+    ->with([
+
+        'userOrganizations',
+
+    ])
+    ->withCount([
+
+        'userOrganizations as total_members' =>
             function ($query) {
 
-                $query->where(
-                    'user_id',
-                    Auth::id()
+                $query->whereNull(
+                    'division_id'
                 );
 
             }
-        )->with([
-            'userOrganizations',
-        ])->get();
+
+    ])
+    ->get();
 
         return view('pages.dashboard', [
 

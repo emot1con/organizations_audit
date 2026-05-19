@@ -19,9 +19,26 @@ class OrganizationPageController extends Controller
     public function index()
     {
         $organizations = Organization::with([
-            'owner',
-            'userOrganizations',
-        ])->latest()->get();
+
+        'owner',
+
+        'userOrganizations',
+
+    ])
+    ->withCount([
+
+        'userOrganizations as total_members' =>
+            function ($query) {
+
+                $query->whereNull(
+                    'division_id'
+                );
+
+            }
+
+    ])
+    ->latest()
+    ->get();
 
         return view('pages.organizations.index', [
             'organizations' => $organizations
@@ -42,16 +59,12 @@ class OrganizationPageController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-
             'name' => 'required|string|max:255',
-
             'description' => 'nullable|string',
-
-            'contact' => 'nullable|string|max:255',
-
-            'category' => 'required|string|max:255',
-
             'organizations_cash' => 'required|numeric|min:0',
+            'contact' => 'nullable|string|max:255',
+            'password_organizations' => 'required|string|min:4|max:255',
+            'category_organizations' => 'required|string|max:255',
 
         ]);
 
@@ -66,11 +79,10 @@ class OrganizationPageController extends Controller
                 'name' => $validated['name'],
                 'description' => $validated['description'] ?? null,
                 'contact' => $validated['contact'] ?? null,
-                'category_organizations' => $validated['category'] ?? null,
-                'organizations_cash' => $validated['organizations_cash'],
-
-                'owner_id' => Auth::id(),
-
+                'organizations_cash' => $validated['organizations_cash'] ?? null,
+                'category_organizations' => $validated['category_organizations'],
+                'owner_id' => $request->user()->id,
+                'password_organizations' =>bcrypt($validated['password_organizations']),
             ]);
 
            /**
@@ -88,13 +100,21 @@ class OrganizationPageController extends Controller
 
             ]);
 
+            
+
             /**
              * Ambil seluruh permission organization
              */
             $permissions = Permission::where(
-                'scope',
-                'organization'
-            )->pluck('id');
+                    'scope',
+                    'organization'
+                )
+                ->pluck('id')
+                ->toArray();
+
+            $adminRole->permissions()->sync(
+                $permissions
+            );  
 
             /**
              * Attach semua permission

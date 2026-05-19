@@ -51,4 +51,105 @@ class User extends Authenticatable
     {
         return $this->hasMany(Transaction::class, 'created_by');
     }
+
+    public function hasDivisionPermission(
+    $divisionId,
+    $permissionName
+    )
+    {
+        $membership = $this->userOrganizations()
+
+            ->with('role.permissions')
+
+            ->where(
+                'division_id',
+                $divisionId
+            )
+            ->first();
+
+        /**
+         * Tidak punya membership division
+         */
+        if (
+            !$membership
+            ||
+            !$membership->role
+        ) {
+
+            return false;
+
+        }
+
+        /**
+         * Pastikan role division
+         */
+        if (
+            $membership->role->scope
+            !== 'division'
+        ) {
+
+            return false;
+
+        }
+
+        /**
+         * Cek permission
+         */
+        return $membership->role
+            ->permissions
+            ->pluck('name')
+            ->contains($permissionName);
+    }
+
+    public function hasOrganizationPermission(
+    $organizationId,
+    $permissionName
+    )
+    {
+        $membership = $this->userOrganizations()
+
+            ->with('role.permissions')
+
+            ->where(
+                'organization_id',
+                $organizationId
+            )
+            ->whereNull(
+                'division_id'
+            )
+            ->first();
+
+        /**
+         * Tidak punya membership organization
+         */
+        if (
+            !$membership
+            ||
+            !$membership->role
+        ) {
+
+            return false;
+
+        }
+
+        /**
+         * Pastikan role organization
+         */
+        if (
+            $membership->role->scope
+            !== 'organization'
+        ) {
+
+            return false;
+
+        }
+
+        /**
+         * Cek permission
+         */
+        return $membership->role
+            ->permissions
+            ->pluck('name')
+            ->contains($permissionName);
+    }
 }

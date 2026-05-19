@@ -32,7 +32,7 @@
                     <x-form.input.select
                     class="mb-5"
                     label="Kategori Organisasi"
-                    name="category"
+                    name="category_organizations"
                     placeholder="Pilih kategori organisasi"
                     :options="[
                         'Himpunan' => 'Himpunan',
@@ -45,7 +45,7 @@
                         class="mb-5"
                         label="Kode Join Organisasi"
                         type="text"
-                        name="password_organization"
+                        name="password_organizations"
                         placeholder="Masukkan Kode Untuk verifikasi User Join"
                         value=""
                     />

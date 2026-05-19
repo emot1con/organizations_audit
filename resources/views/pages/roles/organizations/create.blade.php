@@ -163,15 +163,26 @@
                 </div>
 
                 {{-- Button --}}
-                <div class="flex justify-end">
+                <div class="flex justify-end gap-3">
 
-                    <x-form.input.button type="submit">
+                {{-- Back --}}
+                <a
+                    href="{{ url()->previous() }}"
+                    class="inline-flex h-11 items-center justify-center rounded-xl border border-gray-300 bg-white px-5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.05] transition"
+                >
 
-                        Tambah Role
+                    Back
 
-                    </x-form.input.button>
+                </a>
 
-                </div>
+                {{-- Submit --}}
+                <x-form.input.button type="submit">
+
+                    Tambah Role
+
+                </x-form.input.button>
+
+            </div>
 
             </form>
 

@@ -74,25 +74,60 @@
             {{-- Action --}}
             <div>
 
+                
+
                 @if ($type === 'organization')
 
+                    <a
+                        href="{{ route('organizations.show', $organization) }}"
+                        class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.05] transition"
+                    >
+
+                        Beranda Organisasi
+                    </a>
+                    
+                    @if(auth()->user()->hasOrganizationPermission($organization->id,'transaksi'))
                     <a href="{{ route('organizations.transactions.create', $organization) }}"
                         class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600 transition">
 
                         Tambah Transaksi
 
                     </a>
+                    @endif
 
                 @else
 
-                    <a href="{{ route('divisions.transactions.create', $division) }}"
-                        class="inline-flex items-center justify-center rounded-xl bg-orange-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-orange-600 transition">
+                    <a
+                        href="{{ route('divisions.show', $division) }}"
+                        class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.05] transition"
+                    >
 
-                        Tambah Transaksi
-
+                        Beranda Divisi
                     </a>
 
+                    @if(
+                        auth()->user()->hasDivisionPermission(
+                            $division->id,
+                            'transaksi'
+                        )
+                    )
+
+                        {{-- Tambah Transaksi --}}
+                        <a
+                            href="{{ route('divisions.transactions.create', $division) }}"
+                            class="inline-flex h-11 items-center justify-center rounded-xl bg-brand-500 px-5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-brand-600"
+                        >
+
+                            Tambah Transaksi
+
+                        </a>
+
+
+                    @endif
+
                 @endif
+
+                
 
             </div>
 
@@ -139,9 +174,11 @@
                             Tanggal
                         </th>
 
+
                         <th class="px-6 py-4 text-right text-sm font-semibold text-gray-500 dark:text-gray-400">
                             Action
                         </th>
+    
 
                     </tr>
 
@@ -252,6 +289,7 @@
                             </td>
 
                             {{-- Action --}}
+                            
                             <td class="px-6 py-5">
 
                                 <div class="flex justify-end gap-2">
@@ -260,7 +298,7 @@
                                         $type === 'organization' &&
                                         $transaction->status === 'pending'
                                     )
-                                    
+                                    @if(auth()->user()->hasOrganizationPermission($organization->id,'transaksi'))
                                         <form
                                             action="{{ route('organizations.transactions.approve', [$organization, $transaction]) }}"
                                             method="POST"
@@ -296,6 +334,7 @@
                                         </button>
 
                                     </form>
+                                    @endif
 
                                     @endif
 

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Division;
 use App\Models\Organization;
 use App\Models\OrganizationRole;
+use App\Models\Transaction;
 use App\Models\UserOrganization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +31,7 @@ class OrganizationController extends Controller
             'description' => 'nullable|string',
             'organizations_cash' => 'required|numeric|min:0',
             'contact' => 'nullable|string|max:255',
+            'password_organizations' => 'required|string|min:4|max:255',
         ]);
 
         DB::beginTransaction();
@@ -47,6 +50,7 @@ class OrganizationController extends Controller
                 'contact' => $validated['contact'] ?? null,
                 'organizations_cash' => $validated['organizations_cash'] ?? null,
                 'owner_id' => $request->user()->id,
+                'password_organizations' => bcrypt($validated['password_organizations']),
             ]);
 
             // 3. Hubungkan User yang membuat dengan Organisasi baru sebagai 'admin'
@@ -71,5 +75,100 @@ class OrganizationController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+
+    public function destroy(
+    Organization $organization
+    )
+    {
+        /**
+         * Ambil seluruh division
+         */
+        $divisions = Division::where(
+            'organization_id',
+            $organization->id
+        )->get();
+
+        /**
+         * Hapus permission role division
+         */
+        foreach ($divisions as $division) {
+
+            $divisionRoles = OrganizationRole::where(
+                    'division_id',
+                    $division->id
+                )
+                ->get();
+
+            foreach ($divisionRoles as $role) {
+
+                $role->permissions()->detach();
+
+            }
+
+        }
+
+        /**
+         * Hapus permission role organization
+         */
+        $organizationRoles = OrganizationRole::where(
+            'organization_id',
+            $organization->id
+        )->get();
+
+        foreach ($organizationRoles as $role) {
+
+            $role->permissions()->detach();
+
+        }
+
+        /**
+         * Hapus seluruh member
+         * organization + division
+         */
+        UserOrganization::where(
+            'organization_id',
+            $organization->id
+        )->delete();
+
+        /**
+         * Hapus seluruh role
+         */
+        OrganizationRole::where(
+            'organization_id',
+            $organization->id
+        )->delete();
+
+        /**
+         * Hapus seluruh division
+         */
+        Division::where(
+            'organization_id',
+            $organization->id
+        )->delete();
+
+        /**
+         * Hapus seluruh transaksi
+         */
+        Transaction::where(
+            'organization_id',
+            $organization->id
+        )->delete();
+
+        /**
+         * Hapus organization
+         */
+        $organization->delete();
+
+        /**
+         * Redirect
+         */
+        return redirect()
+            ->route('organizations.index')
+            ->with(
+                'success',
+                'Organisasi berhasil dihapus.'
+            );
     }
 }
