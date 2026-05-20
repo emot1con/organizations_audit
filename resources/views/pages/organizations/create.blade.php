@@ -8,7 +8,7 @@
 
             <x-common.component-card title="Masukkan Data Organiasi">
                 
-                <form action="/organizations" method="POST">
+                <form action="/organizations" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <x-form.input.input 
@@ -20,6 +20,16 @@
                         value=""
                     />
 
+                     @error('name')
+
+                    <p class="mb-5 text-sm text-red-500">
+
+                        {{ $message }}
+
+                    </p>
+
+                    @enderror
+
                     <x-form.input.input
                         class="mb-5"
                         label="Uang Organisasi"
@@ -28,6 +38,16 @@
                         placeholder="Masukkan Total Keuangan Organisasi"
                         value=""
                     />
+
+                     @error('organizations_cash')
+
+                    <p class="mb-5 text-sm text-red-500">
+
+                        {{ $message }}
+
+                    </p>
+
+                    @enderror
 
                     <x-form.input.select
                     class="mb-5"
@@ -41,6 +61,16 @@
                     ]"
                 />
 
+                 @error('category_organizations')
+
+                    <p class="mb-5 text-sm text-red-500">
+
+                        {{ $message }}
+
+                    </p>
+
+                    @enderror
+
                     <x-form.input.input
                         class="mb-5"
                         label="Kode Join Organisasi"
@@ -49,6 +79,16 @@
                         placeholder="Masukkan Kode Untuk verifikasi User Join"
                         value=""
                     />
+
+                     @error('password_organizations')
+
+                    <p class="mb-5 text-sm text-red-500">
+
+                        {{ $message }}
+
+                    </p>
+
+                    @enderror
 
                     <x-form.input.input
                         class="mb-5"
@@ -59,6 +99,23 @@
                         value=""
                     />
 
+                    <x-form.input.file
+                        class="mb-5"
+                        label="Foto Organisasi"
+                        name="photo"
+                        accept="image/*"
+                    />
+
+                    @error('photo')
+
+                    <p class="mb-5 text-sm text-red-500">
+
+                        {{ $message }}
+
+                    </p>
+
+                    @enderror
+
                     <x-form.input.text-area
                         class="mb-3"
                         label="Deskripsi Organisasi"
@@ -66,6 +123,16 @@
                         placeholder="Masukkan Deskripsi Organisasi"
                         rows="4"
                     />
+
+                     @error('desciption')
+
+                    <p class="mb-5 text-sm text-red-500">
+
+                        {{ $message }}
+
+                    </p>
+
+                    @enderror
 
                     <x-form.input.button type="submit">
                         Buat

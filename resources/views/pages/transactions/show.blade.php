@@ -252,49 +252,115 @@
 
             {{-- Proof --}}
             <div
-                class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+    class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]"
+    >
 
-                <h2 class="mb-5 text-xl font-bold text-gray-800 dark:text-white">
+        <h2
+            class="mb-5 text-xl font-bold text-gray-800 dark:text-white"
+        >
 
-                    Bukti Transaksi
+            Bukti Transaksi
 
-                </h2>
+        </h2>
 
-                <span>
+        @if($transaction->proof_url)
+
+            <div
+                class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 dark:border-blue-800 dark:bg-blue-900/20"
+            >
+
+                <a
+                    href="{{ $transaction->proof_url }}"
+                    target="_blank"
+                    class="break-all text-sm font-medium text-blue-600 hover:underline dark:text-blue-300"
+                >
+
                     {{ $transaction->proof_url }}
-                </span>
+
+                </a>
 
             </div>
 
-            {{-- Actions --}}
-            <div
-                class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+        @else
 
-                <h2 class="mb-5 text-xl font-bold text-gray-800 dark:text-white">
+            <div
+                class="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400"
+            >
+
+                Belum ada bukti transaksi.
+
+            </div>
+
+        @endif
+
+    </div>
+
+            {{-- Actions --}}
+            @if(auth()->user()->hasOrganizationPermission($organization->id,'transaksi'))
+            @if($transaction->status === 'pending')
+
+            <div
+                class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]"
+            >
+
+                <h2
+                    class="mb-5 text-xl font-bold text-gray-800 dark:text-white"
+                >
 
                     Actions
 
                 </h2>
 
-                <div class="flex flex-col gap-3">
+                <div class="flex gap-3">
 
-                    <button
-                        class="rounded-xl bg-green-500 px-5 py-3 text-sm font-medium text-white hover:bg-green-600 transition">
+                    {{-- Approve --}}
+                    <form
+                        action="{{ route('organizations.transactions.approve', [$organization, $transaction]) }}"
+                        method="POST"
+                        class="flex-1"
+                    >
 
-                        Approve
+                        @csrf
+                        @method('PATCH')
 
-                    </button>
+                        <button
+                            type="submit"
+                            class="inline-flex w-full items-center justify-center rounded-xl bg-green-500 px-5 py-3 text-sm font-medium text-white transition hover:bg-green-600"
+                        >
 
-                    <button
-                        class="rounded-xl bg-red-500 px-5 py-3 text-sm font-medium text-white hover:bg-red-600 transition">
+                            Approve
 
-                        Tolak
+                        </button>
 
-                    </button>
+                    </form>
+
+                    {{-- Reject --}}
+                    <form
+                        action="{{ route('organizations.transactions.reject', [$organization, $transaction]) }}"
+                        method="POST"
+                        class="flex-1"
+                    >
+
+                        @csrf
+                        @method('PATCH')
+
+                        <button
+                            type="submit"
+                            class="inline-flex w-full items-center justify-center rounded-xl bg-red-500 px-5 py-3 text-sm font-medium text-white transition hover:bg-red-600"
+                        >
+
+                            Tolak
+
+                        </button>
+
+                    </form>
 
                 </div>
 
             </div>
+
+        @endif
+        @endif
 
         </div>
 

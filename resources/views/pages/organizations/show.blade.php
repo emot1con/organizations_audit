@@ -156,15 +156,7 @@
 
                     $randomBadge = $badgeColors[array_rand($badgeColors)];
 
-                    $images = [
-                        'https://images.unsplash.com/photo-1498050108023-c5249f4df085',
-                        'https://images.unsplash.com/photo-1516321318423-f06f85e504b3',
-                        'https://images.unsplash.com/photo-1522202176988-66273c2fd55f',
-                        'https://images.unsplash.com/photo-1519389950473-47ba0277781c',
-                        'https://images.unsplash.com/photo-1521737604893-d14cc237f11d',
-                    ];
-
-                    $randomImage = $images[array_rand($images)];
+                  
 
                 @endphp
 
@@ -172,8 +164,12 @@
                     class="flex flex-col h-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
 
                     <img
-                        src="{{ $randomImage }}"
-                        class="w-full h-48 object-cover">
+                        src="{{ $division->photo
+                            ? asset('storage/' . $division->photo)
+                            : 'https://placehold.net/600x400.png'
+                        }}"
+                        class="w-full h-48 object-cover"
+                    >
 
                     <div class="flex flex-col flex-1 p-6">
 
@@ -244,8 +240,15 @@
                         {{-- Footer --}}
                         <div class="mt-auto flex items-center justify-between pt-6">
 
-                            <span class="text-gray-500 dark:text-gray-400 text-sm">
-                                👥 {{ $division->userOrganizations->count() }} Member
+                            <span class="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+                                </svg>
+
+
+                                {{ $division->userOrganizations->count() }} Member
+
                             </span>
 
                             <a href="{{ route('divisions.show', $division) }}"

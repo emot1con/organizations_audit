@@ -65,7 +65,7 @@
                 </svg>
             </button>
 
-            <!-- Search Bar (desktop only) -->
+            {{-- <!-- Search Bar (desktop only) -->
             <div class="hidden xl:block">
                 <form>
                     <div class="relative">
@@ -88,7 +88,7 @@
                     </div>
                 </form>
             </div>
-        </div>
+        </div> --}}
 
         
 
@@ -125,7 +125,7 @@
                 
 
                 <!-- Notification Dropdown -->
-                <x-header.notification-dropdown />
+                {{-- <x-header.notification-dropdown /> --}}
             </div>
 
             <!-- User Dropdown -->

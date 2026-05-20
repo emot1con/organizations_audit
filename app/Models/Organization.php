@@ -12,6 +12,7 @@ class Organization extends Model
 
     protected $fillable = [
         'name',
+        'photo',
         'description',
         'category_organizations',
         'password_organizations',

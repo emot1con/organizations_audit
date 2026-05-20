@@ -13,6 +13,7 @@
             <form
                 action="{{ route('organizations.update', $organization) }}"
                 method="POST"
+                enctype="multipart/form-data"
             >
 
                 @csrf
@@ -70,6 +71,44 @@
 
                     <p class="mb-5 text-sm text-red-500">
                         {{ $message }}
+                    </p>
+
+                @enderror
+
+                {{-- Preview Foto --}}
+                <div class="mb-5">
+
+                    <label
+                        class="mb-2.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                    >
+
+                        Preview Foto Organisasi
+
+                    </label>
+
+                    <img
+                        src="{{ $organization->photo
+                            ? asset('storage/' . $organization->photo)
+                            : 'https://placehold.net/600x400.png'
+                        }}"
+                        class="h-50 w-50 object-cover border border-gray-200 dark:border-gray-700">
+
+                </div>
+
+                {{-- Upload Foto --}}
+                <x-form.input.file
+                    class="mb-5"
+                    label="Foto Organisasi"
+                    name="photo"
+                    accept="image/*"
+                />
+
+                @error('photo')
+
+                    <p class="mb-5 text-sm text-red-500">
+
+                        {{ $message }}
+
                     </p>
 
                 @enderror

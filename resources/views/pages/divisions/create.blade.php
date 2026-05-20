@@ -26,6 +26,7 @@
             <form
                 action="{{ route('organizations.divisions.store', $organization) }}"
                 method="POST"
+                enctype="multipart/form-data"
             >
 
                 @csrf
@@ -78,6 +79,23 @@
                     </p>
 
                 @enderror
+
+                <x-form.input.file
+                        class="mb-5"
+                        label="Foto Organisasi"
+                        name="photo"
+                        accept="image/*"
+                    />
+
+                    @error('photo')
+
+                    <p class="mb-5 text-sm text-red-500">
+
+                        {{ $message }}
+
+                    </p>
+
+                    @enderror
 
                 {{-- Division Cash --}}
                 <x-form.input.input

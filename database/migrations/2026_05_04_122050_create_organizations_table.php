@@ -9,6 +9,7 @@ return new class extends Migration {
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('photo')->nullable();
             $table->foreignId('owner_id')
             ->nullable()
             ->constrained('users')

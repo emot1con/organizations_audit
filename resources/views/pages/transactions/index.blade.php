@@ -215,7 +215,7 @@
                                 @endphp
 
                                 <span
-                                    class="rounded-full px-3 py-1 text-xs font-medium {{ $categoryColor }}">
+                                    class="whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium {{ $categoryColor }}">
 
                                     {{ ucfirst($transaction->category) }}
 

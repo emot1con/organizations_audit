@@ -140,6 +140,20 @@
 
                                     <div class="flex items-center gap-3">
 
+                                        @if($member->user->photo)
+
+                                        <img
+                                            src="{{ asset('storage/' . $member->user->photo) }}"
+                                            alt="{{ $member->user->name }}"
+                                            class="h-10 w-10 rounded-full object-cover
+                                            {{ $member->user_id == auth()->id()
+                                                ? 'ring-4 ring-blue-100 dark:ring-blue-900/40'
+                                                : ''
+                                            }}"
+                                        >
+
+                                    @else
+
                                         <div
                                             class="flex h-10 w-10 items-center justify-center rounded-full font-semibold text-white
                                             
@@ -147,11 +161,14 @@
                                                 ? 'bg-blue-600 ring-4 ring-blue-100 dark:ring-blue-900/40'
                                                 : 'bg-brand-500'
                                             }}
-                                            ">
+                                            "
+                                        >
 
                                             {{ strtoupper(substr($member->user->name, 0, 1)) }}
 
                                         </div>
+
+                                    @endif
 
                                         <div>
 

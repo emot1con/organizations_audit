@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class OrganizationPageController extends Controller
 {
@@ -46,11 +47,28 @@ class OrganizationPageController extends Controller
     }
 
     /**
+     * Admin organizations list
+     */
+    public function adminIndex()
+    {
+        $organizations = Organization::latest()
+            ->withCount('userOrganizations')
+            ->get();
+
+        return view(
+            'pages.admin.organizations.index',
+            compact('organizations')
+        );
+    }
+
+    /**
      * Form create organization
      */
     public function create()
     {
-        return view('pages.organizations.create');
+        return view(
+            'pages.organizations.create'
+        );
     }
 
     /**
@@ -59,12 +77,27 @@ class OrganizationPageController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'organizations_cash' => 'required|numeric|min:0',
-            'contact' => 'nullable|string|max:255',
-            'password_organizations' => 'required|string|min:4|max:255',
-            'category_organizations' => 'required|string|max:255',
+
+            'name' =>
+                'required|string|max:255',
+
+            'photo' =>
+                'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
+            'description' =>
+                'nullable|string',
+
+            'organizations_cash' =>
+                'required|numeric|min:0',
+
+            'contact' =>
+                'nullable|string|max:255',
+
+            'password_organizations' =>
+                'required|string|min:4|max:255',
+
+            'category_organizations' =>
+                'required|string|max:255',
 
         ]);
 
@@ -73,34 +106,79 @@ class OrganizationPageController extends Controller
         try {
 
             /**
+             * Upload Photo
+             */
+            $photoPath = null;
+
+            if ($request->hasFile('photo')) {
+
+                /**
+                 * Simpan file ke:
+                 * storage/app/public/organizations
+                 */
+                $photoPath = $request
+                    ->file('photo')
+                    ->store(
+                        'organizations',
+                        'public'
+                    );
+
+            }
+
+            /**
              * Buat organization
              */
             $organization = Organization::create([
-                'name' => $validated['name'],
-                'description' => $validated['description'] ?? null,
-                'contact' => $validated['contact'] ?? null,
-                'organizations_cash' => $validated['organizations_cash'] ?? null,
-                'category_organizations' => $validated['category_organizations'],
-                'owner_id' => $request->user()->id,
-                'password_organizations' =>bcrypt($validated['password_organizations']),
+
+                'name' =>
+                    $validated['name'],
+
+                'photo' =>
+                    $photoPath,
+
+                'description' =>
+                    $validated['description']
+                    ?? null,
+
+                'contact' =>
+                    $validated['contact']
+                    ?? null,
+
+                'organizations_cash' =>
+                    $validated['organizations_cash']
+                    ?? null,
+
+                'category_organizations' =>
+                    $validated['category_organizations'],
+
+                'owner_id' =>
+                    $request->user()->id,
+
+                'password_organizations' =>
+                    bcrypt(
+                        $validated['password_organizations']
+                    ),
+
             ]);
 
-           /**
+            /**
              * Buat role Ketua Umum
              */
             $adminRole = OrganizationRole::create([
 
-                'organization_id' => $organization->id,
+                'organization_id' =>
+                    $organization->id,
 
-                'division_id' => null,
+                'division_id' =>
+                    null,
 
-                'name' => 'Ketua Umum',
+                'name' =>
+                    'Ketua Umum',
 
-                'scope' => 'organization',
+                'scope' =>
+                    'organization',
 
             ]);
-
-            
 
             /**
              * Ambil seluruh permission organization
@@ -112,10 +190,6 @@ class OrganizationPageController extends Controller
                 ->pluck('id')
                 ->toArray();
 
-            $adminRole->permissions()->sync(
-                $permissions
-            );  
-
             /**
              * Attach semua permission
              */
@@ -126,30 +200,35 @@ class OrganizationPageController extends Controller
             /**
              * Buat role Anggota
              */
-            $memberRole = OrganizationRole::create([
+            OrganizationRole::create([
 
-                'organization_id' => $organization->id,
+                'organization_id' =>
+                    $organization->id,
 
-                'division_id' => null,
+                'division_id' =>
+                    null,
 
-                'name' => 'Anggota',
+                'name' =>
+                    'Anggota',
 
-                'scope' => 'organization',
+                'scope' =>
+                    'organization',
 
             ]);
-
-           
 
             /**
              * Owner otomatis jadi admin organisasi
              */
             $organization->userOrganizations()->create([
 
-                'user_id' => Auth::id(),
+                'user_id' =>
+                    Auth::id(),
 
-                'role_id' => $adminRole->id,
+                'role_id' =>
+                    $adminRole->id,
 
-                'division_id' => null,
+                'division_id' =>
+                    null,
 
             ]);
 
@@ -169,7 +248,9 @@ class OrganizationPageController extends Controller
 
             DB::rollBack();
 
-            dd($e->getMessage());
+            dd(
+                $e->getMessage()
+            );
 
         }
     }
@@ -225,65 +306,118 @@ class OrganizationPageController extends Controller
     Organization $organization
     )
     {
-        /**
-         * Validation
-         */
         $validated = $request->validate([
 
-            'name' => 'required|string|max:255',
+            'name' =>
+                'required|string|max:255',
 
-            'description' => 'nullable|string',
+            'photo' =>
+                'nullable|image|mimes:jpg,jpeg,png|max:2048',
 
-            'contact' => 'nullable|string|max:255',
+            'description' =>
+                'nullable|string',
 
-            'category_organizations' => 'required|string|max:255',
+            'contact' =>
+                'nullable|string|max:255',
 
-            'password_organizations' => 'nullable|string|min:3|max:255',
+            'category_organizations' =>
+                'required|string|max:255',
+
+            'password_organizations' =>
+                'nullable|string|min:4|max:255',
 
         ]);
 
-        /**
-         * Update Data
-         */
-        $organization->name = $validated['name'];
+        DB::beginTransaction();
 
-        $organization->description =
-            $validated['description'] ?? null;
+        try {
 
-        $organization->contact =
-            $validated['contact'] ?? null;
+            /**
+             * Default photo lama
+             */
+            $photoPath = $organization->photo;
 
-        $organization->category_organizations =
-            $validated['category_organizations'];
+            /**
+             * Upload photo baru
+             */
+            if ($request->hasFile('photo')) {
 
-        /**
-         * Update Password
-         */
-        if ($request->filled('password_organizations')) {
+                /**
+                 * Hapus photo lama
+                 */
+                if ($organization->photo) {
 
-            $organization->password_organizations = Hash::make(
-                $request->password_organizations
+                    Storage::disk('public')
+                        ->delete(
+                            $organization->photo
+                        );
+
+                }
+
+                /**
+                 * Simpan photo baru
+                 */
+                $photoPath = $request
+                    ->file('photo')
+                    ->store(
+                        'organizations',
+                        'public'
+                    );
+
+            }
+
+            /**
+             * Update organization
+             */
+            $organization->update([
+
+                'name' =>
+                    $validated['name'],
+
+                'photo' =>
+                    $photoPath,
+
+                'description' =>
+                    $validated['description']
+                    ?? null,
+
+                'contact' =>
+                    $validated['contact']
+                    ?? null,
+
+                'category_organizations' =>
+                    $validated['category_organizations'],
+
+                'password_organizations' =>
+                    $validated['password_organizations']
+                        ? bcrypt(
+                            $validated['password_organizations']
+                        )
+                        : $organization->password_organizations,
+
+            ]);
+
+            DB::commit();
+
+            return redirect()
+                ->route(
+                    'organizations.settings.index',
+                    $organization
+                )
+                ->with(
+                    'success',
+                    'Organisasi berhasil diperbarui'
+                );
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            dd(
+                $e->getMessage()
             );
 
         }
-
-        /**
-         * Save
-         */
-        $organization->save();
-
-        /**
-         * Redirect
-         */
-        return redirect()
-            ->route(
-                'organizations.show',
-                $organization
-            )
-            ->with(
-                'success',
-                'Organisasi berhasil diupdate'
-            );
     }
 
     /**

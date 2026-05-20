@@ -6,15 +6,17 @@ use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\DivisionRoleController;
 use App\Http\Controllers\DivisionSettingsController;
 use App\Http\Controllers\DivisionUserController;
+use App\Http\Controllers\OrganizationAdminController;
 use App\Http\Controllers\OrganizationMemberController;
 use App\Http\Controllers\OrganizationPageController;
 use App\Http\Controllers\OrganizationRoleController;
 use App\Http\Controllers\OrganizationSettingsController;
 use App\Http\Controllers\OrganizationUserController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransactionDivisionController;
 use App\Http\Controllers\TransactionOrganizationController;
+use App\Http\Controllers\UserAdminController;
 use Illuminate\Support\Facades\Route;
-// use App\Http\Controllers\DashboardController;   
 
 // dashboard pages
 Route::get('/', [DashboardController::class, 'index'])
@@ -29,6 +31,66 @@ Route::post('/login', [AuthController::class, 'login'])
 
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
+
+
+// Profile edit
+
+Route::middleware('auth')->group(function () {
+
+    Route::get(
+        '/profile/edit',
+        [ProfileController::class, 'edit']
+    )->name('profile.edit');
+
+    Route::put(
+        '/profile/update',
+        [ProfileController::class, 'update']
+    )->name('profile.update');
+
+});
+
+// Admin Routes
+Route::middleware([
+    'auth'
+])->prefix('admin')->group(function () {
+
+    /**
+     * Organizations
+     */
+    Route::get(
+        '/organizations',
+        [OrganizationAdminController::class, 'adminIndex']
+    )->name('admin.organizations.index');
+
+    Route::delete(
+        '/organizations/{organization}',
+        [OrganizationAdminController::class, 'destroy']
+    )->name('admin.organizations.destroy');
+
+    /**
+     * Users
+     */
+    Route::get(
+        '/users',
+        [UserAdminController::class, 'index']
+    )->name('admin.users.index');
+
+    Route::get(
+    '/users/{user}/edit',
+    [UserAdminController::class, 'edit']
+    )->name('admin.users.edit');
+
+    Route::put(
+        '/users/{user}',
+        [UserAdminController::class, 'update']
+    )->name('admin.users.update');
+
+    Route::delete(
+        '/users/{user}',
+        [UserAdminController::class, 'destroy']
+    )->name('admin.users.destroy');
+
+});
 
 // Organizations
 Route::resource('organizations', OrganizationPageController::class)->middleware('auth');
@@ -115,6 +177,8 @@ Route::patch(
     '/organizations/{organization}/transactions/{transaction}/reject',
     [TransactionOrganizationController::class, 'reject']
 )->name('organizations.transactions.reject');
+
+
 
 
 

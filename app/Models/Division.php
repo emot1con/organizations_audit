@@ -13,6 +13,7 @@ class Division extends Model
     protected $fillable = [
         'organization_id',
         'name',
+        'photo',
         'category',
         'division_cash',
     ];

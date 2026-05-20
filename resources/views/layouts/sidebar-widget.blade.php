@@ -3,7 +3,7 @@
         Organisasi Kampus
     </h3>
     <p class="mb-4 text-gray-500 text-theme-sm dark:text-gray-400">
-        Leading Tailwind CSS Admin Template with 500+ UI Component and Pages.
+        Semua Kebutuhan Organisasi Dalam Satu Platform
     </p>
     
 </div>

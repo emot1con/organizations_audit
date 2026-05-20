@@ -10,6 +10,8 @@ use App\Models\Transaction;
 use App\Models\UserOrganization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class DivisionController extends Controller
 {
@@ -57,101 +59,159 @@ class DivisionController extends Controller
         /**
          * Validation
          */
-        $request->validate([
+        $validated = $request->validate([
 
-            'name' => 'required|string|max:255',
+            'name' =>
+                'required|string|max:255',
 
-            'category' => 'required|in:tetap,sementara',
+            'photo' =>
+                'nullable|image|mimes:jpg,jpeg,png|max:2048',
 
-        ]);
-
-        /**
-         * Create Division
-         */
-        $division = Division::create([
-
-            'organization_id' => $organization->id,
-
-            'name' => $request->name,
-
-            'category' => $request->category,
-
-            'division_cash' => 0,
+            'category' =>
+                'required|in:tetap,sementara',
 
         ]);
 
-        /**
-         * Default Role Division
-         * Ketua Divisi
-         */
-        $role = OrganizationRole::firstOrCreate([
+        DB::beginTransaction();
 
-            'organization_id' => $organization->id,
+        try {
 
-            'division_id' => $division->id,
+            /**
+             * Upload Photo
+             */
+            $photoPath = null;
 
-            'name' => 'Ketua Divisi',
+            if ($request->hasFile('photo')) {
 
-            'scope' => 'division',
+                $photoPath = $request
+                    ->file('photo')
+                    ->store(
+                        'divisions',
+                        'public'
+                    );
 
-        ]);
+            }
 
-        /**
-         * Default Role Division
-         * Anggota
-         */
-        $memberRole = OrganizationRole::firstOrCreate([
+            /**
+             * Create Division
+             */
+            $division = Division::create([
 
-            'organization_id' => $organization->id,
+                'organization_id' =>
+                    $organization->id,
 
-            'division_id' => $division->id,
+                'name' =>
+                    $validated['name'],
 
-            'name' => 'Anggota',
+                'photo' =>
+                    $photoPath,
 
-            'scope' => 'division',
+                'category' =>
+                    $validated['category'],
 
-        ]);
+                'division_cash' =>
+                    0,
 
-        /**
-         * Full permissions
-         * untuk ketua divisi
-         */
-        $divisionPermissions = Permission::where(
-            'scope',
-            'division'
-        )->pluck('id');
+            ]);
 
-        $role->permissions()->sync(
-            $divisionPermissions
-        );
+            /**
+             * Default Role Division
+             * Ketua Divisi
+             */
+            $role = OrganizationRole::firstOrCreate([
 
-        /**
-         * Auto Join Creator
-         */
-        UserOrganization::create([
+                'organization_id' =>
+                    $organization->id,
 
-            'user_id' => Auth::id(),
+                'division_id' =>
+                    $division->id,
 
-            'organization_id' => $organization->id,
+                'name' =>
+                    'Ketua Divisi',
 
-            'role_id' => $role->id,
+                'scope' =>
+                    'division',
 
-            'division_id' => $division->id,
+            ]);
 
-        ]);
+            /**
+             * Default Role Division
+             * Anggota
+             */
+            OrganizationRole::firstOrCreate([
 
-        /**
-         * Redirect
-         */
-        return redirect()
-            ->route(
-                'organizations.show',
-                $organization
-            )
-            ->with(
-                'success',
-                'Divisi berhasil dibuat'
+                'organization_id' =>
+                    $organization->id,
+
+                'division_id' =>
+                    $division->id,
+
+                'name' =>
+                    'Anggota',
+
+                'scope' =>
+                    'division',
+
+            ]);
+
+            /**
+             * Full permissions
+             * untuk ketua divisi
+             */
+            $divisionPermissions = Permission::where(
+                    'scope',
+                    'division'
+                )
+                ->pluck('id')
+                ->toArray();
+
+            $role->permissions()->sync(
+                $divisionPermissions
             );
+
+            /**
+             * Auto Join Creator
+             */
+            UserOrganization::create([
+
+                'user_id' =>
+                    Auth::id(),
+
+                'organization_id' =>
+                    $organization->id,
+
+                'role_id' =>
+                    $role->id,
+
+                'division_id' =>
+                    $division->id,
+
+            ]);
+
+            DB::commit();
+
+            /**
+             * Redirect
+             */
+            return redirect()
+                ->route(
+                    'organizations.show',
+                    $organization
+                )
+                ->with(
+                    'success',
+                    'Divisi berhasil dibuat'
+                );
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            dd(
+                $e->getMessage()
+            );
+
+        }
     }
 
     /**
@@ -230,7 +290,10 @@ class DivisionController extends Controller
     /**
      * Update division
      */
-    public function update(Request $request, Division $division)
+    public function update(
+    Request $request,
+    Division $division
+    )
     {
         $organization = $division->organization;
 
@@ -246,36 +309,92 @@ class DivisionController extends Controller
             'name' =>
                 'required|string|max:255',
 
+            'photo' =>
+                'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
             'category' =>
                 'required|string|max:255',
 
         ]);
 
-        /**
-         * Update Division
-         */
-        $division->update([
+        DB::beginTransaction();
 
-            'name' =>
-                $validated['name'],
+        try {
 
-            'category' =>
-                 $validated['category'],
+            /**
+             * Default photo lama
+             */
+            $photoPath = $division->photo;
 
-        ]);
+            /**
+             * Upload photo baru
+             */
+            if ($request->hasFile('photo')) {
 
-        /**
-         * Redirect
-         */
-        return redirect()
-            ->route(
-                'divisions.show',
-                $division
-            )
-            ->with(
-                'success',
-                'Divisi berhasil diupdate.'
+                /**
+                 * Hapus photo lama
+                 */
+                if ($division->photo) {
+
+                    Storage::disk('public')
+                        ->delete(
+                            $division->photo
+                        );
+
+                }
+
+                /**
+                 * Simpan photo baru
+                 */
+                $photoPath = $request
+                    ->file('photo')
+                    ->store(
+                        'divisions',
+                        'public'
+                    );
+
+            }
+
+            /**
+             * Update Division
+             */
+            $division->update([
+
+                'name' =>
+                    $validated['name'],
+
+                'photo' =>
+                    $photoPath,
+
+                'category' =>
+                    $validated['category'],
+
+            ]);
+
+            DB::commit();
+
+            /**
+             * Redirect
+             */
+            return redirect()
+                ->route(
+                    'divisions.show',
+                    $division
+                )
+                ->with(
+                    'success',
+                    'Divisi berhasil diupdate.'
+                );
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            dd(
+                $e->getMessage()
             );
+
+        }
     }
 
     /**
