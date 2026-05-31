@@ -8,6 +8,12 @@
 
     <title>@yield('title', 'Organization Audit')</title>
 
+    <link
+    rel="icon"
+    type="image/png"
+    href="{{ asset('images/logo/orgAudit.png') }}"
+>
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
