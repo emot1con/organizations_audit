@@ -42,12 +42,14 @@
 
                 </a>
 
+                @if(auth()->user()->hasOrganizationPermission($organization->id,'divisi'))
                 <a href="{{ route('organizations.divisions.create', $organization) }}"
                     class="inline-flex items-center justify-center rounded-xl bg-amber-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-amber-600 transition">
 
                     Buat Divisi
 
                 </a>
+                @endif
 
                 <a href="{{ route('organizations.settings.index', $organization) }}"
                     class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.05] transition">

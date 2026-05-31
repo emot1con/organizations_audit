@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Organization;
 use App\Models\OrganizationRole;
 use App\Models\Permission;
+use App\Models\Transaction;
 use App\Models\UserOrganization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -229,6 +230,40 @@ class OrganizationPageController extends Controller
 
                 'division_id' =>
                     null,
+
+            ]);
+
+            /**
+             * Buat transaksi dana awal organisasi
+             */
+            Transaction::create([
+
+                'organization_id' =>
+                    $organization->id,
+
+                'division_id' =>
+                    null,
+
+                'created_by' =>
+                    Auth::id(),
+
+                'approved_by' =>
+                    Auth::id(),
+
+                'category' =>
+                    'Pemasukan Organisasi',
+
+                'amount' =>
+                    $validated['organizations_cash'],
+
+                'transaction_date' =>
+                    now(),
+
+                'description' =>
+                    'Dana awal pembentukan organisasi',
+
+                'status' =>
+                    'approved',
 
             ]);
 

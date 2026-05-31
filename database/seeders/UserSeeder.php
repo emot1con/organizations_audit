@@ -61,8 +61,8 @@ class UserSeeder extends Seeder
          * Random Users
          */
 
-        User::factory()
-            ->count(100)
-            ->create();
+        // User::factory()
+        //     ->count(100)
+        //     ->create();
     }
 }
