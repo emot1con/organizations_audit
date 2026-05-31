@@ -1,5 +1,7 @@
 @extends('layouts.fullscreen-layout')
 
+@section('title', 'Sign Up Organization Audit')
+
 @section('content')
     <div class="relative z-1 bg-white p-6 sm:p-0 dark:bg-gray-900">
         <div class="relative flex h-screen w-full flex-col justify-center sm:p-0 lg:flex-row dark:bg-gray-900">
@@ -150,10 +152,21 @@
                     <x-common.common-grid-shape/>
                     <div class="flex max-w-xs flex-col items-center">
                         <a href="/" class="mb-4 block">
-                            <img src="./images/logo/auth-logo.svg" alt="Logo" />
+
+                            <h1
+                                class="text-5xl font-extrabold tracking-tight text-white"
+                            >
+
+                                <span class="text-blue-500">
+                                    Org
+                                </span>Audit
+
+                            </h1>
+
                         </a>
-                        <p class="text-center text-gray-400 dark:text-white/60">
-                            Free and Open-Source Tailwind CSS Admin Dashboard Template
+
+                        <p class="max-w-sm text-center text-gray-400 dark:text-white/60">
+                            Platform terintegrasi untuk mengelola organisasi, divisi, anggota, dan proses audit transaksi secara transparan.
                         </p>
                     </div>
                 </div>

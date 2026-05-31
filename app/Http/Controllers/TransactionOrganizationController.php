@@ -13,32 +13,62 @@ class TransactionOrganizationController extends Controller
      * Display a listing of the resource.
      */
    public function index(
+    Request $request,
     Organization $organization
     )
     {
         $transactions = $organization->transactions()
+
             ->with([
-
                 'createdBy',
-
                 'approvedBy',
-
                 'division',
-
             ])
+
+            ->when(
+                $request->start_date,
+                function ($query) use ($request) {
+
+                    $query->whereDate(
+                        'transaction_date',
+                        '>=',
+                        $request->start_date
+                    );
+
+                }
+            )
+
+            ->when(
+                $request->end_date,
+                function ($query) use ($request) {
+
+                    $query->whereDate(
+                        'transaction_date',
+                        '<=',
+                        $request->end_date
+                    );
+
+                }
+            )
+
             ->orderByDesc('transaction_date')
+
             ->orderByDesc('id')
+
             ->get();
 
         return view(
             'pages.transactions.index',
             [
 
-                'organization' => $organization,
+                'organization' =>
+                    $organization,
 
-                'transactions' => $transactions,
+                'transactions' =>
+                    $transactions,
 
-                'type' => 'organization',
+                'type' =>
+                    'organization',
 
             ]
         );
@@ -188,6 +218,127 @@ class TransactionOrganizationController extends Controller
                 'transaction' => $transaction,
 
                 'type' => 'organization',
+
+            ]
+        );
+    }
+
+   public function print(
+    Request $request,
+    Organization $organization
+    )
+    {
+        $transactions = $organization->transactions()
+
+            ->with([
+                'createdBy',
+                'approvedBy',
+                'division',
+            ])
+
+            ->where(
+                'status',
+                'approved'
+            )
+
+            ->when(
+                $request->start_date,
+                function ($query) use ($request) {
+
+                    $query->whereDate(
+                        'transaction_date',
+                        '>=',
+                        $request->start_date
+                    );
+
+                }
+            )
+
+            ->when(
+                $request->end_date,
+                function ($query) use ($request) {
+
+                    $query->whereDate(
+                        'transaction_date',
+                        '<=',
+                        $request->end_date
+                    );
+
+                }
+            )
+
+            ->orderBy(
+                'transaction_date'
+            )
+
+            ->get();
+
+        /**
+         * Total pemasukan
+         */
+        $totalIncome = $transactions
+
+            ->filter(function ($transaction) {
+
+                return str_contains(
+                    strtolower($transaction->category),
+                    'pemasukan'
+                );
+
+            })
+
+            ->sum('amount');
+
+        /**
+         * Total pengeluaran
+         */
+        $totalExpense = $transactions
+
+            ->filter(function ($transaction) {
+
+                return str_contains(
+                    strtolower($transaction->category),
+                    'pengeluaran'
+                );
+
+            })
+
+            ->sum('amount');
+
+        /**
+         * Saldo
+         */
+        $balance =
+            $totalIncome -
+            $totalExpense;
+
+        return view(
+            'pages.transactions.organization-print',
+            [
+
+                'organization' =>
+                    $organization,
+
+                'transactions' =>
+                    $transactions,
+
+                'totalIncome' =>
+                    $totalIncome,
+
+                'totalExpense' =>
+                    $totalExpense,
+
+                'balance' =>
+                    $balance,
+
+                'printedBy' =>
+                    Auth::user(),
+
+                'startDate' =>
+                    $request->start_date,
+
+                'endDate' =>
+                    $request->end_date,
 
             ]
         );

@@ -122,10 +122,10 @@ class MenuHelper
         ];
     }
 
-    // public static function isActive($path)
-    // {
-    //     return request()->is(ltrim($path, '/'));
-    // }
+    public static function isActive($path)
+    {
+        return request()->is(ltrim($path, '/'));
+    }
 
     public static function getIconSvg($iconName)
     {

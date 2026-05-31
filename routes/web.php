@@ -16,12 +16,28 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransactionDivisionController;
 use App\Http\Controllers\TransactionOrganizationController;
 use App\Http\Controllers\UserAdminController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // dashboard pages
-Route::get('/', [DashboardController::class, 'index'])
-    ->middleware('auth')
-    ->name('dashboard');
+Route::get('/', function () {
+
+    if (Auth::check()) {
+
+        return redirect()->route('dashboard');
+
+    }
+
+    return view('pages.landing');
+
+})->name('home');
+
+Route::get(
+    '/dashboard',
+    [DashboardController::class, 'index']
+)
+->middleware('auth')
+->name('dashboard');
 
 Route::post('/register', [AuthController::class, 'register'])
     ->name('register.process');
@@ -31,6 +47,37 @@ Route::post('/login', [AuthController::class, 'login'])
 
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
+
+Route::get(
+    '/forgot-password',
+    function () {
+        return view(
+            'pages.auth.forgot-password'
+        );
+    }
+)->name('password.forgot');
+
+Route::get('/login', function () {
+
+    return view(
+        'pages.auth.login',
+        [
+            'title' => 'Sign In'
+        ]
+    );
+
+})->name('login');
+
+Route::get('/register', function () {
+
+    return view(
+        'pages.auth.register',
+        [
+            'title' => 'Sign Up'
+        ]
+    );
+
+})->name('signup');
 
 
 // Profile edit
@@ -102,8 +149,32 @@ Route::resource('organizations.divisions',DivisionController::class);
 Route::resource('divisions', DivisionController::class);
 
 // Transaksi
+Route::get(
+    '/organizations/{organization}/transactions/print',
+    [
+        TransactionOrganizationController::class,
+        'print'
+    ]
+)->name(
+    'organizations.transactions.print'
+);
+
+Route::get(
+    '/divisions/{division}/transactions/print',
+    [
+        TransactionDivisionController::class,
+        'print'
+    ]
+)->name(
+    'divisions.transactions.print'
+);
+
 Route::resource('organizations.transactions', TransactionOrganizationController::class);
 Route::resource('divisions.transactions', TransactionDivisionController::class);
+
+
+
+
 
 // Join Organization
 Route::resource('organization.memberJoin', OrganizationMemberController::class)->middleware('auth');
@@ -179,83 +250,7 @@ Route::patch(
 )->name('organizations.transactions.reject');
 
 
-
-
-
-// calender pages
-Route::get('/calendar', function () {
-    return view('pages.calender', ['title' => 'Calendar']);
-})->name('calendar');
-
-// profile pages
-Route::get('/profile', [AuthController::class, 'me'])->middleware('auth')->name('profile');
-
-// form pages
-Route::get('/form-elements', function () {
-    return view('pages.form.form-elements', ['title' => 'Form Elements']);
-})->name('form-elements');
-
-// tables pages
-Route::get('/basic-tables', function () {
-    return view('pages.tables.basic-tables', ['title' => 'Basic Tables']);
-})->name('basic-tables');
-
-// pages
-
-Route::get('/blank', function () {
-    return view('pages.blank', ['title' => 'Blank']);
-})->name('blank');
-
-// error pages
-Route::get('/error-404', function () {
-    return view('pages.errors.error-404', ['title' => 'Error 404']);
-})->name('error-404');
-
-// chart pages
-Route::get('/line-chart', function () {
-    return view('pages.chart.line-chart', ['title' => 'Line Chart']);
-})->name('line-chart');
-
-Route::get('/bar-chart', function () {
-    return view('pages.chart.bar-chart', ['title' => 'Bar Chart']);
-})->name('bar-chart');
-
-
-// authentication pages
-Route::get('/login', function () {
-    return view('pages.auth.login', ['title' => 'Sign In']);
-})->name('login');
-
-Route::get('/register', function () {
-    return view('pages.auth.register', ['title' => 'Sign Up']);
-})->name('signup');
-
-// ui elements pages
-Route::get('/alerts', function () {
-    return view('pages.ui-elements.alerts', ['title' => 'Alerts']);
-})->name('alerts');
-
-Route::get('/avatars', function () {
-    return view('pages.ui-elements.avatars', ['title' => 'Avatars']);
-})->name('avatars');
-
-Route::get('/badge', function () {
-    return view('pages.ui-elements.badges', ['title' => 'Badges']);
-})->name('badges');
-
-Route::get('/buttons', function () {
-    return view('pages.ui-elements.buttons', ['title' => 'Buttons']);
-})->name('buttons');
-
-Route::get('/image', function () {
-    return view('pages.ui-elements.images', ['title' => 'Images']);
-})->name('images');
-
-Route::get('/videos', function () {
-    return view('pages.ui-elements.videos', ['title' => 'Videos']);
-})->name('videos');
-
-
+// Error
 Route::fallback(function () {
     return response()->view('pages.errors.error-404', [], 404);
 });

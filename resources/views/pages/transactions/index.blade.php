@@ -74,26 +74,37 @@
             {{-- Action --}}
             <div>
 
-                
-
                 @if ($type === 'organization')
 
                     <a
                         href="{{ route('organizations.show', $organization) }}"
                         class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.05] transition"
                     >
-
                         Beranda Organisasi
                     </a>
-                    
+
                     @if(auth()->user()->hasOrganizationPermission($organization->id,'transaksi'))
-                    <a href="{{ route('organizations.transactions.create', $organization) }}"
-                        class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600 transition">
 
-                        Tambah Transaksi
+                        <a
+                            href="{{ route('organizations.transactions.create', $organization) }}"
+                            class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600 transition"
+                        >
+                            Tambah Transaksi
+                        </a>
 
-                    </a>
                     @endif
+
+                    <a
+                        href="{{ route('organizations.transactions.print', [
+                            $organization,
+                            'start_date' => request('start_date'),
+                            'end_date' => request('end_date')
+                        ]) }}"
+                        target="_blank"
+                        class="inline-flex items-center justify-center rounded-xl bg-blue-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-blue-600 transition"
+                    >
+                        Print Laporan
+                    </a>
 
                 @else
 
@@ -101,7 +112,6 @@
                         href="{{ route('divisions.show', $division) }}"
                         class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.05] transition"
                     >
-
                         Beranda Divisi
                     </a>
 
@@ -112,26 +122,98 @@
                         )
                     )
 
-                        {{-- Tambah Transaksi --}}
                         <a
                             href="{{ route('divisions.transactions.create', $division) }}"
                             class="inline-flex h-11 items-center justify-center rounded-xl bg-brand-500 px-5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-brand-600"
                         >
-
                             Tambah Transaksi
-
                         </a>
-
 
                     @endif
 
-                @endif
+                    <a
+                        href="{{ route('divisions.transactions.print', [
+                            $division,
+                            'start_date' => request('start_date'),
+                            'end_date' => request('end_date')
+                        ]) }}"
+                        target="_blank"
+                        class="inline-flex items-center justify-center rounded-xl bg-blue-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-blue-600 transition"
+                    >
+                        Print Laporan
+                    </a>
 
-                
+                @endif
 
             </div>
 
         </div>
+
+    </div>
+
+    {{-- Filter --}}
+    <div
+        class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]"
+    >
+
+        <form
+            method="GET"
+            class="flex flex-wrap items-end gap-4"
+        >
+
+            <div>
+
+                <label
+                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                    Dari Tanggal
+                </label>
+
+                <input
+                    type="date"
+                    name="start_date"
+                    value="{{ request('start_date') }}"
+                    class="rounded-xl border border-gray-300 px-4 py-2 dark:border-gray-700 dark:bg-gray-900 text-gray-700 dark:text-gray-300"
+                >
+
+            </div>
+
+            <div>
+
+                <label
+                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                    Sampai Tanggal
+                </label>
+
+                <input
+                    type="date"
+                    name="end_date"
+                    value="{{ request('end_date') }}"
+                    class="rounded-xl border border-gray-300 px-4 py-2 dark:border-gray-700 dark:bg-gray-900 text-gray-700 dark:text-gray-300"
+                >
+
+            </div>
+
+            <button
+                type="submit"
+                class="rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-brand-600"
+            >
+                Filter
+            </button>
+
+            @if(request('start_date') || request('end_date'))
+
+                <a
+                    href="{{ url()->current() }}"
+                    class="rounded-xl border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300"
+                >
+                    Reset
+                </a>
+
+            @endif
+
+        </form>
 
     </div>
 

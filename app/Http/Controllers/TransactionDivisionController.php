@@ -13,10 +13,12 @@ class TransactionDivisionController extends Controller
      * Display a listing of the resource.
      */
     public function index(
+    Request $request,
     Division $division
     )
     {
         $transactions = $division->transactions()
+
             ->with([
 
                 'createdBy',
@@ -26,8 +28,37 @@ class TransactionDivisionController extends Controller
                 'division',
 
             ])
+
+            ->when(
+                $request->start_date,
+                function ($query) use ($request) {
+
+                    $query->whereDate(
+                        'transaction_date',
+                        '>=',
+                        $request->start_date
+                    );
+
+                }
+            )
+
+            ->when(
+                $request->end_date,
+                function ($query) use ($request) {
+
+                    $query->whereDate(
+                        'transaction_date',
+                        '<=',
+                        $request->end_date
+                    );
+
+                }
+            )
+
             ->orderByDesc('transaction_date')
+
             ->orderByDesc('id')
+
             ->get();
 
         return view(
@@ -37,11 +68,14 @@ class TransactionDivisionController extends Controller
                 'organization' =>
                     $division->organization,
 
-                'division' => $division,
+                'division' =>
+                    $division,
 
-                'transactions' => $transactions,
+                'transactions' =>
+                    $transactions,
 
-                'type' => 'division',
+                'type' =>
+                    'division',
 
             ]
         );
@@ -242,6 +276,121 @@ class TransactionDivisionController extends Controller
                 'transaction' => $transaction,
 
                 'type' => 'division',
+
+            ]
+        );
+    }
+
+    public function print(
+    Request $request,
+    Division $division
+    )
+    {
+        $transactions = $division->transactions()
+
+            ->with([
+                'createdBy',
+                'approvedBy',
+                'division',
+            ])
+
+            ->where(
+                'status',
+                'approved'
+            )
+
+            ->when(
+                $request->start_date,
+                function ($query) use ($request) {
+
+                    $query->whereDate(
+                        'transaction_date',
+                        '>=',
+                        $request->start_date
+                    );
+
+                }
+            )
+
+            ->when(
+                $request->end_date,
+                function ($query) use ($request) {
+
+                    $query->whereDate(
+                        'transaction_date',
+                        '<=',
+                        $request->end_date
+                    );
+
+                }
+            )
+
+            ->orderBy(
+                'transaction_date'
+            )
+
+            ->get();
+
+        $totalIncome = $transactions
+
+            ->filter(function ($transaction) {
+
+                return str_contains(
+                    strtolower($transaction->category),
+                    'pemasukan'
+                );
+
+            })
+
+            ->sum('amount');
+
+        $totalExpense = $transactions
+
+            ->filter(function ($transaction) {
+
+                return str_contains(
+                    strtolower($transaction->category),
+                    'pengeluaran'
+                );
+
+            })
+
+            ->sum('amount');
+
+        $balance =
+            $totalIncome -
+            $totalExpense;
+
+        return view(
+            'pages.transactions.division-print',
+            [
+
+                'organization' =>
+                    $division->organization,
+
+                'division' =>
+                    $division,
+
+                'transactions' =>
+                    $transactions,
+
+                'totalIncome' =>
+                    $totalIncome,
+
+                'totalExpense' =>
+                    $totalExpense,
+
+                'balance' =>
+                    $balance,
+
+                'printedBy' =>
+                    Auth::user(),
+
+                'startDate' =>
+                    $request->start_date,
+
+                'endDate' =>
+                    $request->end_date,
 
             ]
         );
