@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Http\Request;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,6 +18,9 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Paksa semua URL menjadi HTTPS
+        URL::forceScheme('https');
+
         // Mencegah N+1 Problem (Strict Mode) saat development
         Model::preventLazyLoading(! app()->isProduction());
 

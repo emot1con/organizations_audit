@@ -156,18 +156,23 @@
                 <div class="mb-5">
 
                     <label
-                        class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-
+                        class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                    >
                         Tanggal Transaksi
-
                     </label>
 
-                    <x-form.date-picker
-                        id="transaction_date"
+                    <input
+                        type="text"
+                        value="{{ now()->translatedFormat('d F Y') }}"
+                        disabled
+                        class="h-11 w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm"
+                    >
+
+                    <input
+                        type="hidden"
                         name="transaction_date"
-                        placeholder="Pilih tanggal transaksi"
-                        defaultDate="{{ old('transaction_date', now()->format('Y-m-d')) }}"
-                    />
+                        value="{{ now()->format('Y-m-d') }}"
+                    >
 
                 </div>
 

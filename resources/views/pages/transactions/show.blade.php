@@ -318,6 +318,8 @@
                         action="{{ route('organizations.transactions.approve', [$organization, $transaction]) }}"
                         method="POST"
                         class="flex-1"
+                        onsubmit="return confirm('Yakin ingin mengapprove transaksi ({{ $transaction->description }})?')"
+
                     >
 
                         @csrf
@@ -339,7 +341,8 @@
                         action="{{ route('organizations.transactions.reject', [$organization, $transaction]) }}"
                         method="POST"
                         class="flex-1"
-                    >
+                        onsubmit="return confirm('Yakin ingin Menolak transaksi ({{ $transaction->description }})?')"
+
 
                         @csrf
                         @method('PATCH')

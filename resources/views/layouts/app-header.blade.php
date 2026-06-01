@@ -49,10 +49,17 @@
             </button>
 
             <!-- Logo (mobile only) -->
-            <a href="/" class="xl:hidden">
-                <img class="dark:hidden" src="/images/logo/logo.svg" alt="Logo" />
-                <img class="hidden dark:block" src="/images/logo/logo-dark.svg" alt="Logo" />
-            </a>
+            {{-- <h1
+                        x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
+                        class="text-3xl font-bold text-gray-800 dark:text-white"
+                    >
+
+                        <span class="text-blue-500">
+
+                        Org
+                        </span>Audit
+
+                    </h1> --}}
 
             <!-- Application Menu Toggle (mobile only) -->
             <button @click="toggleApplicationMenu()"
@@ -93,9 +100,11 @@
         
 
         <!-- Application Menu (mobile) and Right Side Actions (desktop) -->
-        <div :class="isApplicationMenuOpen ? 'flex' : 'hidden'"
-            class="items-center justify-between w-full gap-4 px-5 py-4 xl:flex shadow-theme-md xl:justify-end xl:px-0 xl:shadow-none">
-            <div class="flex items-center gap-2 2xsm:gap-3">
+        <div
+            :class="isApplicationMenuOpen ? 'flex flex-col' : 'hidden'"
+            class="w-full gap-4 px-5 py-4 xl:flex xl:flex-row xl:items-center xl:justify-end ..."
+        >
+            <div class="flex flex-col w-full gap-3 sm:flex-row sm:w-auto sm:items-center">
 
                 @auth
                     <a href="/organizations/create" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl  transition-all duration-200">

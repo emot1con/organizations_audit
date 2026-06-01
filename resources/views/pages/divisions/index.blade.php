@@ -90,7 +90,7 @@
 
             </div>
 
-            <div class="flex items-center gap-3">
+            {{-- <div class="flex items-center gap-3">
 
                 <input
                     type="text"
@@ -98,7 +98,7 @@
                     class="h-11 rounded-xl border border-gray-300 bg-transparent px-4 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-white xl:w-[280px]"
                 >
 
-            </div>
+            </div> --}}
 
         </div>
 
@@ -156,13 +156,13 @@
 
                                     <div class="flex items-center gap-3">
 
-                                        <div
+                                        {{-- <div
                                             class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-500 font-semibold text-white"
                                         >
 
                                             {{ strtoupper(substr($division->name, 0, 1)) }}
 
-                                        </div>
+                                        </div> --}}
 
                                         <div>
 
@@ -185,7 +185,7 @@
                                 </td>
 
                                 {{-- Category --}}
-                                <td class="px-5 py-4">
+                                <td class="px-5 py-4 text-right whitespace-nowrap">
 
                                     <span
                                         class="rounded-full bg-purple-100 px-3 py-1 text-xs text-purple-600 dark:bg-purple-900 dark:text-purple-300"
@@ -198,7 +198,7 @@
                                 </td>
 
                                 {{-- Total Member --}}
-                                <td class="px-5 py-4">
+                                <td class="px-5 py-4 text-right whitespace-nowrap">
 
                                     <span
                                         class="rounded-full bg-blue-100 px-3 py-1 text-xs text-blue-600 dark:bg-blue-900 dark:text-blue-300"
@@ -211,7 +211,7 @@
                                 </td>
 
                                 {{-- Total Role --}}
-                                <td class="px-5 py-4">
+                                <td class="px-5 py-4 text-right whitespace-nowrap">
 
                                     <span
                                         class="rounded-full bg-green-100 px-3 py-1 text-xs text-green-600 dark:bg-green-900 dark:text-green-300"

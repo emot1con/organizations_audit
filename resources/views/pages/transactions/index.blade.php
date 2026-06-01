@@ -72,7 +72,7 @@
             </div>
 
             {{-- Action --}}
-            <div>
+            <div class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:justify-end">
 
                 @if ($type === 'organization')
 
@@ -384,6 +384,7 @@
                                         <form
                                             action="{{ route('organizations.transactions.approve', [$organization, $transaction]) }}"
                                             method="POST"
+                                            onsubmit="return confirm('Yakin ingin mengapprove transaksi ({{ $transaction->description }})?')"
                                         >
 
                                             @csrf
@@ -402,6 +403,7 @@
                                         <form
                                         action="{{ route('organizations.transactions.reject', [$organization, $transaction]) }}"
                                         method="POST"
+                                        onsubmit="return confirm('Yakin ingin Menolak transaksi ({{ $transaction->description }})?')"
                                     >
 
                                         @csrf

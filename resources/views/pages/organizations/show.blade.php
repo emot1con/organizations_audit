@@ -24,7 +24,7 @@
             </div>
 
             {{-- Action Buttons --}}
-            <div class="flex gap-3">
+           <div class="flex flex-col gap-3 w-full sm:w-auto sm:flex-row sm:flex-wrap">  
 
                 @if(auth()->user()->hasOrganizationPermission($organization->id,'transaksi'))
                 <a href="{{ route('organizations.transactions.create', $organization) }}"

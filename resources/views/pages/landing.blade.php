@@ -24,7 +24,7 @@
         }
 
         .gradient{
-            background: linear-gradient(135deg,#2563eb,#7c3aed);
+            background: linear-gradient(135deg,#2b2f37,#7c3aed);
         }
 
         .glass{
