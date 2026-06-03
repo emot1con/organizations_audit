@@ -18,11 +18,13 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // Paksa semua URL menjadi HTTPS
-        URL::forceScheme('https');
+        // Paksa semua URL menjadi HTTPS di environment production
+        if (app()->isProduction()) {
+            URL::forceScheme('https');
+        }
 
         // Mencegah N+1 Problem (Strict Mode) saat development
-        Model::preventLazyLoading(! app()->isProduction());
+        Model::preventLazyLoading(!app()->isProduction());
 
         // Konfigurasi Rate Limiting
         $this->configureRateLimiting();
