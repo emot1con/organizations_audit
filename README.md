@@ -1,58 +1,143 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# OrgAudit - Organization Audit System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Laravel Version](https://img.shields.io/badge/Laravel-v13.x-red.svg)](https://laravel.com)
+[![PHP Version](https://img.shields.io/badge/PHP-%3E%3D%208.3-blue.svg)](https://php.net)
+[![Tailwind CSS Version](https://img.shields.io/badge/Tailwind%20CSS-v4.x-38bdf8.svg)](https://tailwindcss.com)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-## About Laravel
+**OrgAudit** adalah platform manajemen organisasi kampus modern yang dirancang untuk mengelola struktur organisasi, pembagian peran (*roles & permissions*), manajemen divisi, serta pemantauan dan audit keuangan secara transparan, aman, dan terstruktur.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Fitur Utama
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. Autentikasi & Manajemen Pengguna
+*   **Registrasi & Login**: Sistem masuk aman untuk anggota dan admin sistem.
+*   **Manajemen Profil**: Pengguna dapat memperbarui informasi pribadi mereka dengan mudah.
+*   **Pemulihan Kata Sandi**: Fitur *Forgot Password* untuk mereset kata sandi.
 
-## Learning Laravel
+### 2. Room Organisasi & Divisi
+*   **Pembuatan Room Organisasi**: Setiap organisasi dapat membuat ruang tersendiri dengan deskripsi, kategori, kontak, serta opsi kata sandi untuk bergabung.
+*   **Pembagian Divisi**: Struktur organisasi dapat diturunkan menjadi divisi-divisi internal untuk koordinasi yang lebih spesifik.
+*   **Gabung Organisasi/Divisi**: Anggota dapat mencari dan mengajukan diri untuk bergabung ke organisasi atau divisi tertentu.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 3. Manajemen Hak Akses Dinamis (Roles & Permissions)
+*   **Role Organisasi & Divisi**: Pengaturan peran kustom (misal: Ketua, Bendahara, Sekretaris, Anggota).
+*   **Hak Akses Dinamis**: Administrator organisasi/divisi dapat mengelola izin (*permissions*) secara detail untuk setiap peran (membaca, menulis, menyetujui transaksi, dll.).
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 4. Manajemen Keuangan & Audit Transaksi
+*   **Pencatatan Transaksi**: Pengajuan transaksi pemasukan atau pengeluaran dana organisasi/divisi.
+*   **Bukti Transaksi**: Mendukung pengunggahan tautan atau berkas bukti transaksi untuk transparansi.
+*   **Alur Persetujuan (Approval Flow)**: Transaksi memiliki status `pending`, `approved`, atau `rejected`. Bendahara atau pemilik organisasi dapat meninjau dan mengubah status tersebut.
+*   **Laporan Keuangan & Cetak Transaksi**: Fitur cetak laporan transaksi dan invoice baik di tingkat organisasi maupun divisi untuk kebutuhan audit fisik.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### 5. Panel Admin Utama (System Level Admin)
+*   **Manajemen Pengguna**: Admin sistem dapat mengelola, menyunting, dan menghapus akun pengguna.
+*   **Manajemen Organisasi**: Admin sistem memiliki kendali penuh untuk meninjau dan menghapus organisasi yang terdaftar di dalam sistem.
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 🛠️ Teknologi yang Digunakan
 
+*   **Framework Utama**: [Laravel 13](https://laravel.com)
+*   **Database**: SQLite (Default), mendukung PostgreSQL dan MySQL
+*   **Frontend**: Blade Templating Engine
+*   **Styling**: [Tailwind CSS v4](https://tailwindcss.com) (melalui Vite integration)
+*   **Reaktivitas**: [Alpine.js](https://alpinejs.dev)
+*   **Pustaka Tambahan**:
+    *   [ApexCharts](https://apexcharts.com/) (Visualisasi data dan grafik keuangan)
+    *   [FullCalendar](https://fullcalendar.io/) (Manajemen jadwal dan agenda)
+    *   [Flatpickr](https://flatpickr.js.org/) (Pemilihan tanggal)
+    *   [Swiper](https://swiperjs.com/) (Slider interaktif)
+
+---
+
+## 📋 Persyaratan Sistem
+
+Sebelum memulai instalasi, pastikan sistem Anda memenuhi persyaratan berikut:
+*   **PHP** >= 8.3
+*   **Composer** (Manajer Dependensi PHP)
+*   **Node.js & NPM** (Untuk kompilasi aset frontend)
+*   **SQLite** / database engine lainnya (MySQL / PostgreSQL)
+
+---
+
+## ⚙️ Panduan Instalasi & Konfigurasi
+
+Ikuti langkah-langkah di bawah ini untuk memasang project di lingkungan lokal Anda:
+
+### 1. Klon Repositori
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone <url-repositori-anda>
+cd expenses_tracker
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. Jalankan Perintah Setup
+Project ini menyediakan perintah pintas *setup* yang terintegrasi di dalam `composer.json` untuk mempermudah konfigurasi awal. Perintah ini akan otomatis menginstal dependensi Composer, membuat berkas `.env`, menghasilkan *application key*, menjalankan migrasi database, menginstal dependensi NPM, dan membangun aset frontend.
 
-## Contributing
+Cukup jalankan:
+```bash
+composer setup
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+*Atau jika ingin melakukannya secara manual:*
+```bash
+# Instal dependensi PHP
+composer install
 
-## Code of Conduct
+# Salin konfigurasi environment
+cp .env.example .env
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Generate Application Key
+php artisan key:generate
 
-## Security Vulnerabilities
+# Jalankan migrasi database
+php artisan migrate --force
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Instal dependensi JavaScript & kompilasi aset
+npm install
+npm run build
+```
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🖥️ Menjalankan Project
+
+Untuk menjalankan server pengembangan lokal secara efisien, jalankan perintah berikut:
+
+```bash
+composer dev
+```
+
+> [!NOTE]
+> Perintah `composer dev` menggunakan package `concurrently` untuk menyalakan beberapa layanan sekaligus secara paralel:
+> *   **Server Utama**: `php artisan serve` (berjalan di http://127.0.0.1:8000)
+> *   **Queue Listener**: `php artisan queue:listen` (untuk antrean tugas latar belakang)
+> *   **Vite Dev Server**: `npm run dev` (hot reloading untuk aset frontend & CSS)
+> *   **Laravel Pail**: `php artisan pail` (untuk logging langsung di terminal)
+
+---
+
+## 🧪 Akun Pengujian (Seeded Users)
+
+Untuk mempermudah proses pengujian fitur, Anda dapat menjalankan seeder database untuk mengisi data awal:
+
+```bash
+php artisan db:seed
+```
+
+Setelah menjalankan seeder, Anda dapat menggunakan akun-akun default di bawah ini untuk masuk ke aplikasi:
+
+| Nama | Email | Kata Sandi | Peran Sistem |
+| :--- | :--- | :--- | :--- |
+| **Admin** | `admin@gmail.com` | `admin123` | Administrator Utama |
+| **Deru** | `deru@gmail.com` | `admin123` | Pengguna Umum / Anggota |
+| **Rachel** | `rachel@gmail.com` | `admin123` | Pengguna Umum / Anggota |
+| **Arqan** | `arqan@gmail.com` | `admin123` | Pengguna Umum / Anggota |
+
+---
+
+## 🤝 Kontribusi & Lisensi
+
+Project ini dibuat untuk memenuhi tugas kuliah pemrograman web.
+Dilisensikan di bawah [MIT License](LICENSE).

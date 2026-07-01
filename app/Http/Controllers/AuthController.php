@@ -27,39 +27,8 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        // return response()->json([
-        //     'message' => 'User registered successfully',
-        //     'data' => $user,
-        //     'access_token' => $token,
-        //     'token_type' => 'Bearer',
-        // ], 201);
         return redirect('/login')->with('success', 'Register berhasil');
     }
-
-    // public function login(Request $request)
-    // {
-    //     $request->validate([
-    //         'email' => 'required|email',
-    //         'password' => 'required',
-    //     ]);
-
-    //     $user = User::where('email', $request->email)->first();
-
-    //     if (! $user || ! Hash::check($request->password, $user->password)) {
-    //         throw ValidationException::withMessages([
-    //             'email' => ['Kredensial yang diberikan tidak cocok dengan data kami.'],
-    //         ]);
-    //     }
-
-    //     $token = $user->createToken('auth_token')->plainTextToken;
-
-    //     return response()->json([
-    //         'message' => 'Login successful',
-    //         'data' => $user,
-    //         'access_token' => $token,
-    //         'token_type' => 'Bearer',
-    //     ]);
-    // }
 
     public function login(Request $request)
     {
@@ -84,11 +53,6 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        // $request->user()->currentAccessToken()->delete();
-
-        // return response()->json([
-        //     'message' => 'Logged out successfully'
-        // ]);
         Auth::logout();
 
         $request->session()->invalidate();
@@ -96,12 +60,12 @@ class AuthController extends Controller
 
         return redirect('/login');
     }
-    
+
     public function me(Request $request)
     {
         // Akan mengembalikan data user saat ini beserta organisasinya nanti
         $user = $request->user()->load('userOrganizations.organization', 'userOrganizations.division', 'userOrganizations.role');
-        
+
         return view('pages.profile', [
             'title' => 'Profile',
             'user' => $user
